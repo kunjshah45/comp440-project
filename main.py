@@ -1,4 +1,3 @@
-from crypt import methods
 from sqlite3 import Cursor
 from flask import Flask, jsonify, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
@@ -13,7 +12,7 @@ app = Flask(__name__)
 app.secret_key = '3iefqkbcgrbk3w'
 
 # Enter your database connection details below
-app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'comp440'
 app.config['MYSQL_PASSWORD'] = 'pass1234'
 app.config['MYSQL_DB'] = 'comp440'
@@ -49,13 +48,13 @@ def login():
             session['loggedin'] = True
             session['username'] = account['username']
             # Redirect to home page
-            return redirect(url_for('home'))
+            return redirect(url_for('dashboard'))
         else:
             print("No account found")
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
     # Show the login form with message (if any)
-    return render_template('index.html', msg=msg)
+    return render_template('login.html', msg=msg)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -101,12 +100,18 @@ def register():
     # Show registration form with message (if any)
     return render_template('register.html', msg=msg)
 
-@app.route('/home')
-def home():
+@app.route('/dashboard')
+def dashboard():
     # Check if user is loggedin
     if 'loggedin' in session:
-        return render_template('home.html', username=session['username'])
-    return redirect(url_for('login'))
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM posts;')
+        posts = cursor.fetchall()
+
+        # <!-- style="background-image: url('{{ url_for(\'static\', filename=fname) }}')" -->
+        return render_template('index.html', posts=posts)
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/logout')
 def logout():
@@ -134,17 +139,23 @@ def initDb():
 
     return render_template('register.html', msg=msg)
 
-@app.route('/fetchblogs')
-def fetchBlogs():
-    # fetch all the blogs
-    # add pagination later
-    pass
 
-@app.route('/fetchblog/<blogid>')
-def fetchBlog(blogid):
+@app.route('/post/<blogid>')
+def post(blogid):
     # fetch a blog along with all the comments
     # this will also handle one comment per user each blog
-    pass
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM posts where slug='{}'".format(blogid)
+    cursor.execute(query)
+    post = cursor.fetchone()
+
+    query = 'SELECT * FROM comments where postid={}'.format(post['sno'])
+    cursor.execute(query)
+    comments = cursor.fetchall()
+    print(comments)
+
+
+    return render_template('blog.html', post=post, comments=comments)
 
 @app.route('/addblogs')
 def addBlog():
@@ -156,5 +167,5 @@ def addComment(postId):
     # check users comment history no more then 3 comments per day
     print(postId)
     username = request.form['username']
-    
+
     return jsonify(postId)
