@@ -155,4 +155,6 @@ def addBlog():
 def addComment(postId):
     # check users comment history no more then 3 comments per day
     print(postId)
+    username = request.form['username']
+    
     return jsonify(postId)
