@@ -1,5 +1,6 @@
+from crypt import methods
 from sqlite3 import Cursor
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, jsonify, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
@@ -26,7 +27,7 @@ if __name__ == '__main__':
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # Output message if something goes wrong...
-    msg = ''
+    msg = ''    
     # Check if "username" and "password" POST requests exist (user submitted form)
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         # Create variables for easy access
@@ -37,7 +38,6 @@ def login():
         # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         query = "SELECT * FROM users WHERE username='{}' AND password='{}'".format(username, hashedPassword)
-        print(query)
         cursor.execute(query)
         # Fetch one record and return result
         account = cursor.fetchone()
@@ -133,3 +133,26 @@ def initDb():
     msg = "Data initialized successfully"
 
     return render_template('register.html', msg=msg)
+
+@app.route('/fetchblogs')
+def fetchBlogs():
+    # fetch all the blogs
+    # add pagination later
+    pass
+
+@app.route('/fetchblog/<blogid>')
+def fetchBlog(blogid):
+    # fetch a blog along with all the comments
+    # this will also handle one comment per user each blog
+    pass
+
+@app.route('/addblogs')
+def addBlog():
+    # post a blog with the user logged in
+    pass
+
+@app.route('/addcomment/<postId>', methods=['POST'])
+def addComment(postId):
+    # check users comment history no more then 3 comments per day
+    print(postId)
+    return jsonify(postId)
