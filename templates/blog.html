@@ -10,7 +10,7 @@
         style="color: darkgrey;">{{post.date.strftime('%b %d, %Y')}}</i>
       <span style="display: flex; float: right; color: rgb(15, 11, 19); font-size: 17px; font-weight: 600;"><i
           class="far fa-eye"> {{post.views}}</i> &nbsp;&nbsp;&nbsp;&nbsp; <i class="far fa-comment-dots">
-          {{post.countcomm}}</i></span>
+          {{cocomment|count}}</i></span>
     </p>
     <hr>
     <section class="blog-content">
@@ -23,7 +23,7 @@
   <!-- Comment view -->
   <div class="card card-comments mb-3 wow fadeIn border-0">
     <button type="button" class="btn btn-outline-primary btn-lg py-3" data-toggle="collapse" data-target="#demo"
-      style="border: 2px solid rgb(2,117,216); font-size: 20px;">See Comments ({{post.countcomm}})</button>
+      style="border: 2px solid rgb(2,117,216); font-size: 20px;">See Comments ({{cocomment|count}})</button>
     <div class="card-header font-weight-bold p-0 border-0"></div>
     {%for Comments in cocomment%}
     <div id="demo" class="collapse">
@@ -43,11 +43,12 @@
   </div>
   <!-- Comment view end -->
   <!--  General Comment reply -->
-  <form action="" method="POST" onsubmit="window.location.reload();">
+  <form action="./addcomment" method="POST">
     <div class="form-group">
       <h2 class="heading" style="font-size: 25px; color:rgb(2,117,216);">Write a Comment...</h2>
       <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
           Dropdown button
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -57,13 +58,16 @@
       </div>
     </div>
     <div class="form-group">
+      <input type="hidden" value={{post.sno}} name="postid">
+      <input type="hidden" value={{post.sno}} name="postid">
       <div class="controls">
         <textarea name="message" style=" font-size: 16px; border: 1px solid rgb(2,117,216);" class="floatLabel"
           placeholder="Comment" id="comments" required="required"></textarea>
       </div>
       <br>
       <div class="controls">
-        <button class="btn btn-outline-primary btn-md" type="submit">Send It</button>
+        <button class="btn btn-outline-primary btn-md" type="submit" {% for item in cocomment %} {% if
+          item["username"]==session["username"] %} disabled {% endif %} {% endfor %}>Send It</button>
       </div>
     </div>
   </form>
