@@ -157,10 +157,10 @@ def post(blogid):
 
     return render_template('blog.html', post=post, comments=comments)
 
-@app.route('/addblogs')
-def addBlog():
-    # post a blog with the user logged in
-    pass
+# @app.route('/addblogs')
+# def addBlog():
+#     # post a blog with the user logged in
+#     pass
 
 @app.route('/addcomment/<postId>', methods=['POST'])
 def addComment(postId):
@@ -169,3 +169,8 @@ def addComment(postId):
     username = request.form['username']
 
     return jsonify(postId)
+
+# LAtest adding
+@app.route('/addblogs')
+def addBlog():
+   return render_template('dashboard.html')

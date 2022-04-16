@@ -1,14 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<br>
+<br>
 <!-- Page Header -->
-<div class="overlay">
-</div>
 <div class="container">
   <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
       <div class="site-heading">
-        <br><br><br>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         {% for message in messages %}
@@ -22,10 +20,7 @@
         {% endif %}
         {% endwith %}
         <h1 style="text-align: center; font-size: 42px; font-weight: bold; ">User Panel</h1>
-        <hr>
-        <hr>
-        <h1 class="subheading" style="text-align: center;">Manage Posts</h1>
-        <hr>
+    
       </div>
     </div>
   </div>
@@ -35,12 +30,11 @@
 <div class="container mx-auto">
   <div class="row">
     <div class="col-lg-10 col-md-10 mx-auto">
-      <h1>Dashboard Actions</h1>
+      <h1>User Actions</h1>
 
-      <a href="/edit/0"> <button class="btn btn-outline-primary btn-md"> Add a new post</button></a>
-      <a href="/logout"> <button class="btn btn-outline-danger btn-md"> Logout</button></a>
+      <a href="/edit/0"> <button class="btn btn-outline-primary btn-md"> Add a new Blog</button></a>
       <hr>
-      <h2>Edit Posts</h2>
+      <h2>Edit Blogs</h2>
       <table class="table">
         <thead>
           <tr>
@@ -81,4 +75,5 @@
     </div>
   </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 {% endblock %}

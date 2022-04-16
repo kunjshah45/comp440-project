@@ -101,15 +101,15 @@ body {
 
 .login form input[type="submit"]:hover,
 .register form input[type="submit"]:hover {
-  background-color: #2f3947;
+  color:black;
+  background-color: #7ccfff;
   transition: background-color 0.2s;
 }
 
 .navtop {
-  background-color: #2f3947;
+  background-color: #7ccfff;
   height: 60px;
   width: 100%;
-  border: 0;
 }
 
 .navtop div {
@@ -137,7 +137,7 @@ body {
 .navtop div a {
   padding: 0 20px;
   text-decoration: none;
-  color: #c1c4c8;
+  color: #111f31;
   font-weight: bold;
 }
 
@@ -506,9 +506,6 @@ select {
   width: 100%;
   margin-bottom: 18px;
   color: #888;
-  font-family: 'Lato', 'sans-serif';
-  font-size: 12px;
-  font-weight: 300;
   background-color: #fff;
   border-radius: 4px;
   transition: all .3s;

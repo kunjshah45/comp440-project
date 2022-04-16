@@ -14,12 +14,9 @@
 
 <div class="cool-card">
     <div class="card-column-next">
-        {%for post in posts%}
-        {% set fname = 'posts_img/' + post.img_file %}
+        {%for post in posts%}     
         <article class="card">
-            <a href="/post/{{post.slug}}" class="card-image">
-
-            </a>
+        
             <section class="card-content1">
 
                 <h2 class="card-body" style="font-family: sans-serif;">
