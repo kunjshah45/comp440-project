@@ -1,4 +1,3 @@
-# from sqlite3 import Cursor
 from flask import Flask, jsonify, render_template, request, redirect, url_for, session
 # from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
@@ -194,20 +193,26 @@ def post(blogid):
 #     pass
 
 @app.route('/addcomment', methods=['POST'])
-def addComment(postId):
-    # check users comment history no more then 3 comments per day
-    if 'loggedin' in session and 'username' in session and session[username] == request.form['username']:
-        postid = request.form['postid']
-        username = request.form['username']
-        message = request.form['message']
+def addComment():
 
-        comment = Comments(postid = postid, username = username, message = message)
+    # check users comment history no more then 3 comments per day
+    if 'loggedin' in session and session["username"] == request.json['username']:
+
+
+        postid = request.json['postid']
+        username = request.json['username']
+        message = request.json['message']
+        commentType = request.json['commentType']
+
+        print(postid, username, message, commentType)
+
+        comment = Comments(postid = postid, username = username, message = message, commentType=commentType)
 
         mysql.session.add(comment)
         mysql.session.commit()
     
 
-    return jsonify(postId)
+    return "success"
 
 # LAtest adding
 @app.route('/addblogs')
