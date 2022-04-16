@@ -1,24 +1,66 @@
-from sqlite3 import Cursor
+# from sqlite3 import Cursor
 from flask import Flask, jsonify, render_template, request, redirect, url_for, session
-from flask_mysqldb import MySQL
+# from flask_mysqldb import MySQL
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 import MySQLdb.cursors
 import re
 import hashlib
+import json
 
 app = Flask(__name__)
-
-
 # Change this to your secret key (can be anything, it's for extra protection)
 app.secret_key = '3iefqkbcgrbk3w'
 
-# Enter your database connection details below
-app.config['MYSQL_HOST'] = '127.0.0.1'
-app.config['MYSQL_USER'] = 'comp440'
-app.config['MYSQL_PASSWORD'] = 'pass1234'
-app.config['MYSQL_DB'] = 'comp440'
+with open('config.json', 'r') as c:
+    params = json.load(c)["params"]
 
+# Enter your database connection details below
+# app.config['MYSQL_HOST'] = params["mysql_host"]
+# app.config['MYSQL_USER'] = params["mysql_user"]
+# app.config['MYSQL_PASSWORD'] = params["mysql_password"]
+# app.config['MYSQL_DB'] = params["mysql_db"]
+
+app.config['SQLALCHEMY_DATABASE_URI'] = params['local_uri']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+app.config['UPLOAD_FOLDER'] = params['upload_location']
+ALLOWED_EXTENSIONS = set(['jpg', 'jpeg'])
 # Intialize MySQL
-mysql = MySQL(app)
+mysql = SQLAlchemy(app)
+
+class Users(mysql.Model):
+    email = mysql.Column(mysql.Integer, unique=True)
+    password = mysql.Column(mysql.String(80), nullable=False)
+    firstName = mysql.Column(mysql.String(12), nullable=False)
+    lastName = mysql.Column(mysql.String(120), nullable=False)
+    username = mysql.Column(mysql.String(12), primary_key=True)
+
+class Contacts(mysql.Model):
+    sno = mysql.Column(mysql.Integer, primary_key=True)
+    name = mysql.Column(mysql.String(80), nullable=False)
+    phone_num = mysql.Column(mysql.String(12), nullable=False)
+    msg = mysql.Column(mysql.String(120), nullable=False)
+    date = mysql.Column(mysql.String(12), nullable=True)
+    email = mysql.Column(mysql.String(20), nullable=False)
+
+class Posts(mysql.Model):
+    sno = mysql.Column(mysql.Integer, primary_key=True)
+    title = mysql.Column(mysql.String(80), nullable=False)
+    slug = mysql.Column(mysql.String(40), nullable=False)
+    content = mysql.Column(mysql.Text, nullable=False)
+    author = mysql.Column(mysql.String(120), nullable=False)
+    date = mysql.Column(mysql.String(12), nullable=True)
+    img_file = mysql.Column(mysql.String(12), nullable=True)
+    countcomm=mysql.Column(mysql.Integer, default=0)
+    views=mysql.Column(mysql.Integer, default=0)
+
+class Comments(mysql.Model):
+    cid = mysql.Column(mysql.Integer, primary_key=True)
+    postid = mysql.Column(mysql.Integer, mysql.ForeignKey('posts.sno'), nullable=False) 
+    username = mysql.Column(mysql.Integer, mysql.ForeignKey('users.username'), nullable=False)
+    commentdate = mysql.Column(mysql.DateTime, nullable=True, default=datetime.now) 
+    message = mysql.Column(mysql.String(550), nullable=False)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', 5000, debug=True, use_debugger=True, use_reloader=True)
@@ -35,18 +77,14 @@ def login():
         h = hashlib.md5(password.encode())
         hashedPassword = h.hexdigest()
         # Check if account exists using MySQL
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        query = "SELECT * FROM users WHERE username='{}' AND password='{}'".format(username, hashedPassword)
-        cursor.execute(query)
-        # Fetch one record and return result
-        account = cursor.fetchone()
-        print("I AM HERE, after execution of db")
+        account = Users.query.filter_by(username=username, password=hashedPassword).first()
+        
         # If account exists in users table in out database
         if account:
             print("account found", account)
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
-            session['username'] = account['username']
+            session['username'] = account.username
             # Redirect to home page
             return redirect(url_for('dashboard'))
         else:
@@ -74,10 +112,8 @@ def register():
         
         if(password == confirmPassword):
             msg = 'Account already exists!'
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-
-            cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
-            account = cursor.fetchone()
+            account = Users.query.filter_by(username=username, password=hashedPassword).first()
+            
             # If account exists show error and validation checks
             if account:
                 msg = 'Account already exists!'
@@ -89,8 +125,10 @@ def register():
                 msg = 'Please fill out the form!'
             else:
                 # Account doesnt exists and the form data is valid, now insert new account into users table
-                cursor.execute('INSERT INTO users VALUES (%s, %s, %s, %s, %s)', (email, hashedPassword, firstname, lastname, username))
-                mysql.connection.commit()
+                user = Users(email=email, password = hashedPassword, firstName = firstname, lastName=lastname, username = username )
+                print(user)
+                mysql.session.add(user)
+                mysql.session.commit()
                 msg = 'You have successfully registered!'
         else:
             msg = "Pasword Does not match"
@@ -104,9 +142,8 @@ def register():
 def dashboard():
     # Check if user is loggedin
     if 'loggedin' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM posts;')
-        posts = cursor.fetchall()
+        
+        posts = Posts.query.all()
 
         # <!-- style="background-image: url('{{ url_for(\'static\', filename=fname) }}')" -->
         return render_template('index.html', posts=posts)
@@ -144,28 +181,31 @@ def initDb():
 def post(blogid):
     # fetch a blog along with all the comments
     # this will also handle one comment per user each blog
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = "SELECT * FROM posts where slug='{}'".format(blogid)
-    cursor.execute(query)
-    post = cursor.fetchone()
 
-    query = 'SELECT * FROM comments where postid={}'.format(post['sno'])
-    cursor.execute(query)
-    comments = cursor.fetchall()
-    print(comments)
+    post = Posts.query.filter_by(slug=blogid).first()
+    cocomment=Comments.query.filter_by(postid=post.sno).all()
+    post.views += 1
+    mysql.session.commit()
 
-
-    return render_template('blog.html', post=post, comments=comments)
+    return render_template('blog.html', post=post, cocomment=cocomment)
 
 @app.route('/addblogs')
 def addBlog():
     # post a blog with the user logged in
     pass
 
-@app.route('/addcomment/<postId>', methods=['POST'])
+@app.route('/addcomment/', methods=['POST'])
 def addComment(postId):
     # check users comment history no more then 3 comments per day
-    print(postId)
-    username = request.form['username']
+    if 'loggedin' in session and 'username' in session and session[username] == request.form['username']:
+        postid = request.form['postid']
+        username = request.form['username']
+        message = request.form['message']
+
+        comment = Comments(postid = postid, username = username, message = message)
+
+        mysql.session.add(comment)
+        mysql.session.commit()
+    
 
     return jsonify(postId)
