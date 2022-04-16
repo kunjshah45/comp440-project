@@ -51,8 +51,6 @@ class Posts(mysql.Model):
     content = mysql.Column(mysql.Text, nullable=False)
     author = mysql.Column(mysql.String(120), nullable=False)
     date = mysql.Column(mysql.String(12), nullable=True)
-    img_file = mysql.Column(mysql.String(12), nullable=True)
-    countcomm=mysql.Column(mysql.Integer, default=0)
     views=mysql.Column(mysql.Integer, default=0)
 
 class Comments(mysql.Model):
@@ -61,6 +59,7 @@ class Comments(mysql.Model):
     username = mysql.Column(mysql.Integer, mysql.ForeignKey('users.username'), nullable=False)
     commentdate = mysql.Column(mysql.DateTime, nullable=True, default=datetime.now) 
     message = mysql.Column(mysql.String(550), nullable=False)
+    commentType = mysql.Column(mysql.Boolean, nullable=False)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', 5000, debug=True, use_debugger=True, use_reloader=True)
@@ -194,7 +193,7 @@ def post(blogid):
 #     # post a blog with the user logged in
 #     pass
 
-@app.route('/addcomment/', methods=['POST'])
+@app.route('/addcomment', methods=['POST'])
 def addComment(postId):
     # check users comment history no more then 3 comments per day
     if 'loggedin' in session and 'username' in session and session[username] == request.form['username']:

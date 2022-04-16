@@ -20,7 +20,7 @@
         {% endif %}
         {% endwith %}
         <h1 style="text-align: center; font-size: 42px; font-weight: bold; ">User Panel</h1>
-    
+
       </div>
     </div>
   </div>
@@ -60,7 +60,7 @@
             <td>{{post.author}}</td>
             <td>{{post.date}}</td>
             <td style="text-align: center;">{{post.views}}</td>
-            <td style="text-align: center;">{{post.countcomm}}</td>
+            <td style="text-align: center;">{{len(cocomment)}}</td>
             <td><img class="table" src="{{ url_for('static', filename=fname) }}" alt="Image placeholder"
                 style="width: 120px; height: 75px;"></td>
             <td><a href="/edit/{{post.sno}}"><button class="btn btn-info">Edit</button></a></td>

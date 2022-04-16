@@ -14,9 +14,9 @@
 
 <div class="cool-card">
     <div class="card-column-next">
-        {%for post in posts%}     
+        {%for post in posts%}
         <article class="card">
-        
+
             <section class="card-content1">
 
                 <h2 class="card-body" style="font-family: sans-serif;">
@@ -28,7 +28,7 @@
                         <a style="color: black;font-size:12px;font-weight: bold;">{{post.author}}</a> &nbsp;<i>||
                         </i><span style="color: black;">&nbsp;{{post.date.strftime('%b %d, %Y')}}</span>
                         <span style="color: black;display: flex;float: right;"><i class="far fa-eye"> {{post.views}}</i>
-                            &nbsp;&nbsp;&nbsp;&nbsp; <i class="far fa-comment"> {{post.countcomm}}</i></span>
+
                     </small></p>
                 <section class="card-text1">
                     <p>{{post.content[0:300] | safe}}...</p>
