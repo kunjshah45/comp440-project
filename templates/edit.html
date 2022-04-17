@@ -33,28 +33,23 @@
         <div class="control-group">
           <div class="form-group floating-label-form-group controls">
             <label>Tags</label>
-            <input class="form-control" placeholder="Tags" id="tags" name="tags" value="{{post.author}}"
+            <input class="form-control" placeholder="Tags" id="tags" name="tags" value="{{post.tags}}"
               required="required">
           </div>
         </div>
         <div class="control-group">
-          <div class="form-group col-xs-12 floating-label-form-group controls">
-            <label>Post Slug</label>
-            <input class="form-control" placeholder="Slug" required name="slug" id="slug" value="{{post.slug}}" required="required">
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>Description</label>
+              <textarea rows="5" class="form-control ckeditor" style="border-radius: 13px;" placeholder="Content"
+                name="content" id="long_desc" required="required">{{post.content}}</textarea>
+            </div>
           </div>
-
-        <div class="control-group">
-          <div class="form-group floating-label-form-group controls">
-            <label>Description</label>
-            <textarea rows="5" class="form-control ckeditor" style="border-radius: 13px;" placeholder="Content"
-              name="content" id="long_desc" required="required">{{post.content}}</textarea>
+          <br>
+          <div id="success"></div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-outline-primary" id="sendMessageButton">Publish</button>
           </div>
-        </div>
-        <br>
-        <div id="success"></div>
-        <div class="form-group">
-          <button type="submit" class="btn btn-outline-primary" id="sendMessageButton">Publish</button>
-        </div>
       </form>
     </div>
   </div>

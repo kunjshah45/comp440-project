@@ -48,6 +48,7 @@ class Posts(mysql.Model):
     title = mysql.Column(mysql.String(80), nullable=False)
     slug = mysql.Column(mysql.String(40), nullable=False)
     content = mysql.Column(mysql.Text, nullable=False)
+    tags = mysql.Column(mysql.Text, nullable=False)
     author = mysql.Column(mysql.String(120), mysql.ForeignKey('users.username'), nullable=False)
     date = mysql.Column(mysql.String(12), nullable=True, default=datetime.now)
     views = mysql.Column(mysql.Integer, default=0)
@@ -124,7 +125,7 @@ def register():
             else:
                 # Account doesnt exists and the form data is valid, now insert new account into users table
                 user = Users(email=email, password = hashedPassword, firstName = firstname, lastName=lastname, username = username )
-                print(user)
+
                 mysql.session.add(user)
                 mysql.session.commit()
                 msg = 'You have successfully registered!'
@@ -193,7 +194,6 @@ def addComment():
     try:
         # check users comment history no more then 3 comments per day
         if 'loggedin' in session and session["username"] == request.json['username']:
-
             postid = request.json['postid']
             username = request.json['username']
             message = request.json['message']
@@ -213,32 +213,28 @@ def edit(blogid):
         if request.method == 'POST':
             
             if 'loggedin' in session:
-                print(request.form)
-
 
                 title = request.form['title']
-                slug = request.form['slug']
+                slug = title.replace(" ", "-").lower()
                 content = request.form['content']
-                author = request.form['author']
+                tags = request.form['tags']
 
                 if blogid=='0':
-                    post = Posts(title=title, slug=slug, content=content, author=session['username'])
+                    post = Posts(title = title, slug = slug, content = content, author = session['username'], tags = tags)
                     mysql.session.add(post)
                     mysql.session.commit()
+                    return redirect("/")
                 else:
                     post = Posts.query.filter_by(sno=blogid).first()
                     post.title = title
                     post.slug = slug
                     post.content = content
-                    post.date = datetime.now
+                    post.date = datetime.now()
+                    post.tags = tags
                     mysql.session.commit()
+                    return redirect('/edit/'+blogid)
 
-                post = Posts(title = title, slug = slug, content = content, author=author)
-
-                mysql.session.add(post)
-                mysql.session.commit()
-
-        post=Posts.query.filter_by(sno=blogid).first()
+        post = Posts.query.filter_by(sno=blogid).first()
         return render_template("edit.html", post=post, sno=blogid)
     except Exception as E:
         print(E)
