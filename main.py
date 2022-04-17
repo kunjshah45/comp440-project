@@ -48,9 +48,9 @@ class Posts(mysql.Model):
     title = mysql.Column(mysql.String(80), nullable=False)
     slug = mysql.Column(mysql.String(40), nullable=False)
     content = mysql.Column(mysql.Text, nullable=False)
-    author = mysql.Column(mysql.String(120), nullable=False)
-    date = mysql.Column(mysql.String(12), nullable=True)
-    views=mysql.Column(mysql.Integer, default=0)
+    author = mysql.Column(mysql.String(120), mysql.ForeignKey('users.username'), nullable=False)
+    date = mysql.Column(mysql.String(12), nullable=True, default=datetime.now)
+    views = mysql.Column(mysql.Integer, default=0)
 
 class Comments(mysql.Model):
     cid = mysql.Column(mysql.Integer, primary_key=True)
@@ -136,8 +136,8 @@ def register():
     # Show registration form with message (if any)
     return render_template('register.html', msg=msg)
 
-@app.route('/dashboard')
-def dashboard():
+@app.route('/')
+def index():
     # Check if user is loggedin
     if 'loggedin' in session:
         
@@ -187,34 +187,69 @@ def post(blogid):
 
     return render_template('blog.html', post=post, cocomment=cocomment)
 
-# @app.route('/addblogs')
-# def addBlog():
-#     # post a blog with the user logged in
-#     pass
 
 @app.route('/addcomment', methods=['POST'])
 def addComment():
+    try:
+        # check users comment history no more then 3 comments per day
+        if 'loggedin' in session and session["username"] == request.json['username']:
 
-    # check users comment history no more then 3 comments per day
-    if 'loggedin' in session and session["username"] == request.json['username']:
+            postid = request.json['postid']
+            username = request.json['username']
+            message = request.json['message']
+            commentType = request.json['commentType']
+
+            comment = Comments(postid = postid, username = username, message = message, commentType=int(commentType))
+
+            mysql.session.add(comment)
+            mysql.session.commit()
+        return jsonify({"status": True, "message":"Sucessfully sent"})
+    except:
+        return jsonify({"status": False, "message":"Error"})
+
+@app.route('/edit/<blogid>', methods=['GET', 'POST'])
+def edit(blogid):
+    try:
+        if request.method == 'POST':
+            
+            if 'loggedin' in session:
+                print(request.form)
 
 
-        postid = request.json['postid']
-        username = request.json['username']
-        message = request.json['message']
-        commentType = request.json['commentType']
+                title = request.form['title']
+                slug = request.form['slug']
+                content = request.form['content']
+                author = request.form['author']
 
-        print(postid, username, message, commentType)
+                if blogid=='0':
+                    post = Posts(title=title, slug=slug, content=content, author=session['username'])
+                    mysql.session.add(post)
+                    mysql.session.commit()
+                else:
+                    post = Posts.query.filter_by(sno=blogid).first()
+                    post.title = title
+                    post.slug = slug
+                    post.content = content
+                    post.date = datetime.now
+                    mysql.session.commit()
 
-        comment = Comments(postid = postid, username = username, message = message, commentType=commentType)
+                post = Posts(title = title, slug = slug, content = content, author=author)
 
-        mysql.session.add(comment)
-        mysql.session.commit()
-    
+                mysql.session.add(post)
+                mysql.session.commit()
 
-    return "success"
+        post=Posts.query.filter_by(sno=blogid).first()
+        return render_template("edit.html", post=post, sno=blogid)
+    except Exception as E:
+        print(E)
+        return jsonify({"status": False, "message":"Error: "})
 
-# LAtest adding
-@app.route('/addblogs')
-def addBlog():
-   return render_template('dashboard.html')
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    try:
+        myPost = Posts.query.filter_by(author=session['username']).all()
+        print(myPost)
+        return render_template("dashboard.html",posts=myPost)
+    except Exception as E:
+        print(E)
+        return jsonify({"status": False, "message":"Error"})
