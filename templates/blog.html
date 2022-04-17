@@ -25,12 +25,17 @@
     <button type="button" class="btn btn-outline-primary btn-lg py-3" data-toggle="collapse" data-target="#demo"
       style="border: 2px solid rgb(2,117,216); font-size: 20px;">See Comments ({{cocomment|count}})</button>
     <div class="card-header font-weight-bold p-0 border-0"></div>
-    {%for Comments in cocomment%}
+    {%for Comments in cocomment %}
     <div id="demo" class="collapse">
       <div class="card-body border-0">
         <div class="media d-block d-md-flex mt-3">
           <div class="media-body text-center text-md-left ml-md-3 ml-0">
-            <h5 class="mt-0 font-weight-bold">{{Comments.name}}</h5>
+            <h5 class="mt-0 font-weight-bold">{{Comments.username}}</h5>
+            {% if Comments.commentType== True %}
+            <p style="font-size: 12px;font-weight: bold; color:green ">Positive</p>
+            {% else %}
+            <p style="font-size: 12px;font-weight: bold; color:red">Negative</p>
+            {% endif %}
             <p class="date" style="font-size: 12px;">{{Comments.commentdate.strftime('%b %d, %Y %I:%M %p')}}</p>
             <p style="font-size: 16px;">
               {{Comments.message}}
