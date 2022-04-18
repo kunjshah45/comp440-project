@@ -23,7 +23,7 @@
 			<a href="{{ url_for('dashboard') }}"><i class="fas fa-home"></i>Dashboard</a>
 			<a href="{{ url_for('edit', blogid=0) }}"><i class="fas fa-plus"></i>Blogs</a>
 			<a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a>
-			<a>{{session["username"]}}</a>
+			<a>Hello, {{session["username"]}} &#128512;!</a>
 		</div>
 	</nav>
 	<div class="content">

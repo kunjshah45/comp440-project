@@ -265,5 +265,5 @@ def initBlogs():
             query = text(file.read())
             con.execute(query)
 
-    return render_template('index.html')
+    return render_template('index.html') 
     
