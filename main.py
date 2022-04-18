@@ -1,7 +1,7 @@
-from flask import Flask, jsonify, render_template, request, redirect, url_for, session
+from flask import Flask, flash, jsonify, render_template, request, redirect, url_for, session
 # from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import date, datetime
 import MySQLdb.cursors
 import re
 import hashlib
@@ -141,10 +141,7 @@ def register():
 def index():
     # Check if user is loggedin
     if 'loggedin' in session:
-        
-        posts = Posts.query.all()
-
-        # <!-- style="background-image: url('{{ url_for(\'static\', filename=fname) }}')" -->
+        posts = Posts.query.order_by(Posts.date.desc()).all()
         return render_template('index.html', posts=posts)
     else:
         return redirect(url_for('login'))
@@ -194,15 +191,20 @@ def addComment():
     try:
         # check users comment history no more then 3 comments per day
         if 'loggedin' in session and session["username"] == request.json['username']:
-            postid = request.json['postid']
-            username = request.json['username']
-            message = request.json['message']
-            commentType = request.json['commentType']
 
-            comment = Comments(postid = postid, username = username, message = message, commentType=int(commentType))
+            commentCheck = Comments.query.filter_by(username = session['username'] and Comments.commentdate>datetime.today()).all()
+            if(len(commentCheck) < 4):
+                postid = request.json['postid']
+                username = request.json['username']
+                message = request.json['message']
+                commentType = request.json['commentType']
 
-            mysql.session.add(comment)
-            mysql.session.commit()
+                comment = Comments(postid = postid, username = username, message = message, commentType=int(commentType))
+
+                mysql.session.add(comment)
+                mysql.session.commit()
+            else:
+                return jsonify({"status": False, "message": "Failed to comment, as user is not permitted to comment more than three comment per day."})
         return jsonify({"status": True, "message":"Sucessfully sent"})
     except:
         return jsonify({"status": False, "message":"Error"})
@@ -211,19 +213,22 @@ def addComment():
 def edit(blogid):
     try:
         if request.method == 'POST':
-            
             if 'loggedin' in session:
-
                 title = request.form['title']
                 slug = title.replace(" ", "-").lower()
                 content = request.form['content']
                 tags = request.form['tags']
 
                 if blogid=='0':
-                    post = Posts(title = title, slug = slug, content = content, author = session['username'], tags = tags)
-                    mysql.session.add(post)
-                    mysql.session.commit()
-                    return redirect("/")
+                    blogCheck = Posts.query.filter_by(author = session['username']).all()
+                    if(len(blogCheck)< 2):
+                        post = Posts(title = title, slug = slug, content = content, author = session['username'], tags = tags)
+                        mysql.session.add(post)
+                        mysql.session.commit()
+                        return redirect("/")
+                    else:
+                        flash('Failed to add blog, as user is not permitted to add more then 2 blogs per day.')
+                        return redirect('/edit/'+blogid)
                 else:
                     post = Posts.query.filter_by(sno=blogid).first()
                     post.title = title
@@ -244,7 +249,6 @@ def edit(blogid):
 def dashboard():
     try:
         myPost = Posts.query.filter_by(author=session['username']).all()
-        print(myPost)
         return render_template("dashboard.html",posts=myPost)
     except Exception as E:
         print(E)
