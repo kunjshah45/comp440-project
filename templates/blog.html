@@ -32,9 +32,11 @@
           <div class="media-body text-center text-md-left ml-md-3 ml-0">
             <h5 class="mt-0 font-weight-bold">{{Comments.username}}</h5>
             {% if Comments.commentType== True %}
-            <p style="font-size: 16px;font-weight: bold; color:green ">Positive <i class="fa fa-thumbs-up" aria-hidden="true"></i></p>
+            <p style="font-size: 16px;font-weight: bold; color:green ">Positive <i class="fa fa-thumbs-up"
+                aria-hidden="true"></i></p>
             {% else %}
-            <p style="font-size: 16px;font-weight: bold; color:red">Negative <i class="fa fa-thumbs-down" aria-hidden="true"></i></p>
+            <p style="font-size: 16px;font-weight: bold; color:red">Negative <i class="fa fa-thumbs-down"
+                aria-hidden="true"></i></p>
             {% endif %}
             <p class="date" style="font-size: 12px;">{{Comments.commentdate.strftime('%b %d, %Y %I:%M %p')}}</p>
             <p style="font-size: 16px;">
@@ -70,12 +72,13 @@
       <br>
       <div class="controls">
         <button class="btn btn-outline-primary btn-md" type="button" {% for item in cocomment %} {% if
-          item["username"]==session["username"] %} disabled {% endif %} {% endfor %} onclick="formSubmit(event)">Send
+          item["username"]==session["username"] or post.author==session["username"] %} disabled {% endif %} {% endfor %}
+          onclick="formSubmit(event)">Send
           It</button>
       </div>
     </div>
   </form>
-  <div class=" form-submission-text" id="afterMessage"></div>
+  <div class="form-submission-text" id="afterMessage"></div>
   <!-- Comment reply end -->
 </main>
 
@@ -105,7 +108,14 @@
     fetch(url, requestOptions)
       .then(response => response.text())
       .then(result => {
-        window.location.reload();
+        result = JSON.parse(result)
+        console.log(result, result["status"]);
+        if (result.status === false) {
+          alert(result["message"]);
+        }
+        else {
+          window.location.reload();
+        }
       })
       .catch(error => {
         document.getElementById("afterMessage").innerHTML = "Something went wrong, I am sorry. You can still react me out at kunjshah45@gmail.com";

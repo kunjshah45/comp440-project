@@ -7,18 +7,6 @@
   <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
       <div class="site-heading">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-success alert-dismissible show" role="alert">
-          <strong>{{message}}</strong>
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
         <h1 style="text-align: center; font-size: 42px; font-weight: bold; ">User Panel</h1>
 
       </div>
