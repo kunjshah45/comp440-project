@@ -80,7 +80,6 @@ def login():
         
         # If account exists in users table in out database
         if account:
-            print("account found", account)
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
             session['username'] = account.username
@@ -192,7 +191,11 @@ def addComment():
         # check users comment history no more then 3 comments per day
         if 'loggedin' in session and session["username"] == request.json['username']:
 
-            commentCheck = Comments.query.filter_by(username = session['username'] and Comments.commentdate>datetime.today()).all()
+            dt = date.today()
+            dateToCheck = datetime.combine(dt, datetime.min.time())
+
+            commentCheck = Comments.query.filter(Comments.commentdate>dateToCheck, Comments.username == session['username']).all()
+            print(commentCheck, len(commentCheck), datetime.today())
             if(len(commentCheck) < 4):
                 postid = request.json['postid']
                 username = request.json['username']
@@ -206,7 +209,8 @@ def addComment():
             else:
                 return jsonify({"status": False, "message": "Failed to comment, as user is not permitted to comment more than three comment per day."})
         return jsonify({"status": True, "message":"Sucessfully sent"})
-    except:
+    except Exception as E:
+        print(E)
         return jsonify({"status": False, "message":"Error"})
 
 @app.route('/edit/<blogid>', methods=['GET', 'POST'])
