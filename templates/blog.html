@@ -32,11 +32,11 @@
           <div class="media-body text-center text-md-left ml-md-3 ml-0">
             <h5 class="mt-0 font-weight-bold">{{Comments.username}}</h5>
             {% if Comments.commentType== True %}
-            <p style="font-size: 16px;font-weight: bold; color:green ">Positive <i class="fa fa-thumbs-up"
-                aria-hidden="true"></i></p>
+              <p style="font-size: 16px;font-weight: bold; color:green ">Positive <i class="fa fa-thumbs-up"
+                  aria-hidden="true"></i></p>
             {% else %}
-            <p style="font-size: 16px;font-weight: bold; color:red">Negative <i class="fa fa-thumbs-down"
-                aria-hidden="true"></i></p>
+              <p style="font-size: 16px;font-weight: bold; color:red">Negative <i class="fa fa-thumbs-down"
+                  aria-hidden="true"></i></p>
             {% endif %}
             <p class="date" style="font-size: 12px;">{{Comments.commentdate.strftime('%b %d, %Y %I:%M %p')}}</p>
             <p style="font-size: 16px;">
