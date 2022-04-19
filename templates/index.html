@@ -3,13 +3,7 @@
 <br>
 <aside>
     <br><br>
-    <form class="searchme" method="Post" action="/search">
-        <!-- <div class="search">
-      <h4 class="ml-2">Search</h4>
-      <input id="searchbox" name="searchbox" id="searchbox" placeholder="Search here..."><br>
-      <button class="btn btn-outline-primary btn-sm ml-2" value="submit"><i class="fas fa-search"></i> Search</button>  
-      </div> -->
-    </form>
+
 </aside>
 
 <div class="cool-card">
@@ -31,7 +25,7 @@
 
                     </small></p>
                 <section class="card-text1">
-                    <p>&#8220; {{post.tags}} &#8221;</p>
+                    <p>Tags - &#8220; {{post.tags}} &#8221;</p>
                     <p>{{post.content[0:300] | safe}}...</p>
                     <div class="post-footer">
                         <p><a href="/post/{{post.slug}}" class="btn text-primary btn-md border border-primary">Read

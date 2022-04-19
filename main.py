@@ -1,6 +1,8 @@
 from flask import Flask, flash, jsonify, render_template, request, redirect, url_for, session
 # from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy import text
 from datetime import date, datetime
 import MySQLdb.cursors
 import re
@@ -90,7 +92,7 @@ def login():
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
     # Show the login form with message (if any)
-    return render_template('login.html', msg=msg)
+    return render_template('login.html', msg=msg) 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -195,7 +197,6 @@ def addComment():
             dateToCheck = datetime.combine(dt, datetime.min.time())
 
             commentCheck = Comments.query.filter(Comments.commentdate>dateToCheck, Comments.username == session['username']).all()
-            print(commentCheck, len(commentCheck), datetime.today())
             if(len(commentCheck) < 4):
                 postid = request.json['postid']
                 username = request.json['username']
@@ -258,4 +259,13 @@ def dashboard():
         print(E)
         return jsonify({"status": False, "message":"Error"})
 
- 
+@app.route('/initBlogs')
+def initBlogs():
+    engine = create_engine('mysql://comp440:pass1234@localhost:3306/comp440', echo=True)
+    with engine.connect() as con:
+        with open("myblog.sql",encoding='utf-8') as file:
+            query = text(file.read())
+            con.execute(query)
+
+    return render_template('index.html') 
+    
