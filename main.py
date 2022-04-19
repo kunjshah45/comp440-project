@@ -140,12 +140,8 @@ def register():
 
 @app.route('/')
 def index():
-    # Check if user is loggedin
-    if 'loggedin' in session:
-        posts = Posts.query.order_by(Posts.date.desc()).all()
-        return render_template('index.html', posts=posts)
-    else:
-        return redirect(url_for('login'))
+    posts = Posts.query.order_by(Posts.date.desc()).all()
+    return render_template('index.html', posts=posts)
 
 @app.route('/logout')
 def logout():
@@ -266,6 +262,7 @@ def initBlogs():
         with open("myblog.sql",encoding='utf-8') as file:
             query = text(file.read())
             con.execute(query)
-
-    return render_template('index.html') 
+    
+    posts = Posts.query.order_by(Posts.date.desc()).all()
+    return render_template('index.html', posts=posts)
     
