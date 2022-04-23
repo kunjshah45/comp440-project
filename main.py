@@ -250,6 +250,7 @@ def edit(blogid):
 def dashboard():
     try:
         myPost = Posts.query.filter_by(author=session['username']).all()
+        # mycomment= Comments.query.filter_by(postid=myPost.sno).all()
         return render_template("dashboard.html",posts=myPost)
     except Exception as E:
         print(E)
@@ -265,4 +266,11 @@ def initBlogs():
     
     posts = Posts.query.order_by(Posts.date.desc()).all()
     return render_template('index.html', posts=posts)
-    
+     
+@app.route('/allfiles')
+def allfiles():
+    return render_template('allFiles.html')
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html') 

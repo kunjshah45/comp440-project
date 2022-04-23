@@ -22,6 +22,17 @@
 
       <a href="/edit/0"> <button class="btn btn-outline-primary btn-md"> Add a new Blog</button></a>
       <hr>
+      <h2>Edit Profile</h2>
+        <form>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Add Your Hobby</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your hobby">
+            <small id="emailHelp" class="form-text text-muted">Enter your hobby</small>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      <hr>
+      
       <h2>Edit Blogs</h2>
       <table class="table">
         <thead>
@@ -37,7 +48,6 @@
           </tr>
         </thead>
         <tbody>
-
 
           {% for post in posts %}
 
@@ -57,6 +67,9 @@
 
         </tbody>
       </table>
+
+      
+        
     </div>
   </div>
 </div>
