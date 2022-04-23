@@ -112,6 +112,7 @@ def register():
         email = request.form['email']
         firstname = request.form['firstName']
         lastname = request.form['lastName']
+        # hobbies=request.form['hobbies']
         
         if(password == confirmPassword):
             msg = 'Account already exists!'
@@ -128,7 +129,7 @@ def register():
                 msg = 'Please fill out the form!'
             else:
                 # Account doesnt exists and the form data is valid, now insert new account into users table
-                user = Users(email=email, password = hashedPassword, firstName = firstname, lastName=lastname, username = username )
+                user = Users(email=email, password = hashedPassword, firstName = firstname, lastName=lastname, username = username)
 
                 mysql.session.add(user)
                 mysql.session.commit()
@@ -289,12 +290,13 @@ def profile(username):
     following = Connections.query.filter_by(fromProfile=session['username']).count()
     followers = Connections.query.filter_by(toProfile=session['username']).count()
     account = Users.query.filter_by(username=username).first()
-    return render_template('profile.html', account=account, following=following, followers=followers)
+    posts = Posts.query.filter_by(author=session['username']).order_by(Posts.date.desc()).all() 
+    return render_template('profile.html', account=account, following=following, followers=followers, posts=posts)
 
 @app.route('/follow', methods=['POST'])
 def follow():
     try:
-        followto = request.form["followto"]
+        followto = request.form["followto"] 
         checkFollow = Connections.query.filter(Connections.fromProfile==session['username'], Connections.toProfile==followto).first()
         if(checkFollow):
             return jsonify({"status":False, "message":"Already Following this user"})
