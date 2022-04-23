@@ -4,11 +4,28 @@
 <br>
     <h2>1) List the users who post at least two blogs, one has a tag of “X”, and another has a 
         tag of “Y”</h2>
+        <div style="display: flex; justify-content: space-around;">
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search for Tag X" aria-label="Search">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search for Tag Y" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    
+        <div>
+            <p>
+                {{ 'Search Results' }}
+            </p>
+        </div>
 
 
 
 
     <h2>2) All the blogs of user such that all the comments are positive for these blogs.</h2>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search for User X" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
         <table class="table">
             <thead>
             <tr>
@@ -17,7 +34,6 @@
             </tr>
             </thead>
             <tbody>
-
                         <tr>
                         {% for post in posts %}
                             <td>{{post.title}}</td>
@@ -38,15 +54,20 @@
         <div style="display: flex; justify-content: space-around;">
             <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search for User X" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search1</button>
-            </form>
-            <form class="form-inline my-2 my-lg-0">
+            
                 <input class="form-control mr-sm-2" type="search" placeholder="Search for User Y" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search2</button>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>
 
         <h2>5) A user pair (A, B) such that they have at least one common hobby. </h2>
+        <div style="display: flex; justify-content: space-around;">
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="User A" aria-label="Search">
+                <input class="form-control mr-sm-2" type="search" placeholder="User B" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
 
         <h2>6) All the users who never posted a blog</h2>
 

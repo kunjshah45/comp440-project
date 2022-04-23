@@ -281,9 +281,9 @@ def initBlogs():
      
 @app.route('/allfiles')
 def allfiles():
-    print(Posts.query.get(Posts.author).distinct().all())
-    query6 = Users.query.filter(Users.username.not_in()).all()
-    print(query6)
+    # print(Posts.query.get(Posts.author).distinct().all())
+    # query6 = Users.query.filter(Users.username.not_in()).all()
+    # print(query6)
     return render_template('allFiles.html')
 
 @app.route('/profile/<username>')
