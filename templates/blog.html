@@ -6,7 +6,7 @@
   <article class="blog-page">
     <h2 class="h2 text-uppercase"><a href="/" style="text-decoration: none;">{{post.title}}</a></h2>
     <p class="blog-content-date" style="font-size: 15px;">Posted by <span
-        style="font-weight: 500; color: green;">{{post.author}}</span> On <i
+        style="font-weight: 500; color: green;"><a href="{{url_for('profile')}}">{{post.author}}</a></span> On <i
         style="color: darkgrey;">{{post.date.strftime('%b %d, %Y')}}</i>
       <span style="display: flex; float: right; color: rgb(15, 11, 19); font-size: 17px; font-weight: 600;"><i
           class="far fa-eye"> {{post.views}}</i> &nbsp;&nbsp;&nbsp;&nbsp; <i class="far fa-comment-dots">
@@ -30,7 +30,7 @@
       <div class="card-body border-0">
         <div class="media d-block d-md-flex mt-3">
           <div class="media-body text-center text-md-left ml-md-3 ml-0">
-            <h5 class="mt-0 font-weight-bold">{{Comments.username}}</h5>
+            <h5 class="mt-0 font-weight-bold"><a href="{{url_for('profile')}}">{{Comments.username}}</a></h5>
             {% if Comments.commentType== True %}
               <p style="font-size: 16px;font-weight: bold; color:green ">Positive <i class="fa fa-thumbs-up"
                   aria-hidden="true"></i></p>
