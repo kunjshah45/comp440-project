@@ -3,6 +3,33 @@ SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
+DROP TABLE IF EXISTS `connections`;
+CREATE TABLE `connections` (
+  `cid` int(11) NOT NULL AUTO_INCREMENT,
+  `fromProfile` varchar(100) NOT NULL,
+  `toProfile` varchar(100) NOT NULL,
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`cid`),
+  FOREIGN KEY (`fromProfile`) REFERENCES Users(`username`),
+  FOREIGN KEY (`toProfile`) REFERENCES Users(`username`)
+)
+
+INSERT INTO `connections` (`cid`, `fromProfile`, `toProfile`,`date`) VALUES
+(1, 'kunjshah', 'kunjshah45', '2022-04-23 03:01:28'),
+(2, 'kunjshah45', 'kunjshah', '2022-04-23 03:01:28');
+
+
+CREATE TABLE `users` (
+  `email` varchar(100) NOT NULL,
+  `password` varchar(500) NOT NULL,
+  `firstName` varchar(100) NOT NULL,
+  `lastName` varchar(50) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `hobbies` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`username`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 -- --------------------------------------------------------
 
 --

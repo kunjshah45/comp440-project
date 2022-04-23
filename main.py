@@ -1,3 +1,5 @@
+from email import message
+from multiprocessing.connection import Connection
 from flask import Flask, flash, jsonify, render_template, request, redirect, url_for, session
 # from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
@@ -16,12 +18,6 @@ app.secret_key = '3iefqkbcgrbk3w'
 with open('config.json', 'r') as c:
     params = json.load(c)["params"]
 
-# Enter your database connection details below
-# app.config['MYSQL_HOST'] = params["mysql_host"]
-# app.config['MYSQL_USER'] = params["mysql_user"]
-# app.config['MYSQL_PASSWORD'] = params["mysql_password"]
-# app.config['MYSQL_DB'] = params["mysql_db"]
-
 app.config['SQLALCHEMY_DATABASE_URI'] = params['local_uri']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
@@ -36,6 +32,13 @@ class Users(mysql.Model):
     firstName = mysql.Column(mysql.String(12), nullable=False)
     lastName = mysql.Column(mysql.String(120), nullable=False)
     username = mysql.Column(mysql.String(12), primary_key=True)
+    hobbies = mysql.Column(mysql.String(80), nullable=False)
+    
+class Connections(mysql.Model):
+    cid = mysql.Column(mysql.Integer, primary_key=True)
+    fromProfile = mysql.Column(mysql.Integer, mysql.ForeignKey('users.username'), nullable=False)
+    toProfile = mysql.Column(mysql.Integer, mysql.ForeignKey('users.username'), nullable=False)
+    date = mysql.Column(mysql.String(12), nullable=True, default=datetime.now)
 
 class Contacts(mysql.Model):
     sno = mysql.Column(mysql.Integer, primary_key=True)
@@ -140,12 +143,8 @@ def register():
 
 @app.route('/')
 def index():
-    # Check if user is loggedin
-    if 'loggedin' in session:
-        posts = Posts.query.order_by(Posts.date.desc()).all()
-        return render_template('index.html', posts=posts)
-    else:
-        return redirect(url_for('login'))
+    posts = Posts.query.order_by(Posts.date.desc()).all()
+    return render_template('index.html', posts=posts)
 
 @app.route('/logout')
 def logout():
@@ -253,27 +252,58 @@ def edit(blogid):
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     try:
+        if request.method == 'POST':
+            if 'loggedin' in session:
+                hobbies = request.form['hobbies'].replace(" ", "_")
+                account = Users.query.filter_by(username=session["username"]).first()
+                account.hobbies = hobbies
+                mysql.session.commit()
+
         myPost = Posts.query.filter_by(author=session['username']).all()
-        # mycomment= Comments.query.filter_by(postid=myPost.sno).all()
-        return render_template("dashboard.html",posts=myPost)
+        account = Users.query.filter_by(username=session["username"]).first()
+        return render_template("dashboard.html",posts=myPost, account=account)
     except Exception as E:
         print(E)
         return jsonify({"status": False, "message":"Error"})
 
 @app.route('/initBlogs')
 def initBlogs():
-    engine = create_engine('mysql://comp440:pass1234@localhost:3306/comp440', echo=True)
+    engine = create_engine(params['local_uri'], echo=True)
     with engine.connect() as con:
         with open("myblog.sql",encoding='utf-8') as file:
             query = text(file.read())
-            con.execute(query) 
-
-    return render_template('index.html')  
-
+            con.execute(query)
+    
+    posts = Posts.query.order_by(Posts.date.desc()).all()
+    return render_template('index.html', posts=posts)
+     
 @app.route('/allfiles')
 def allfiles():
+    print(Posts.query.get(Posts.author).distinct().all())
+    query6 = Users.query.filter(Users.username.not_in()).all()
+    print(query6)
     return render_template('allFiles.html')
 
-@app.route('/profile')
-def profile():
-    return render_template('profile.html') 
+@app.route('/profile/<username>')
+def profile(username):
+    following = Connections.query.filter_by(fromProfile=session['username']).count()
+    followers = Connections.query.filter_by(toProfile=session['username']).count()
+    account = Users.query.filter_by(username=username).first()
+    return render_template('profile.html', account=account, following=following, followers=followers)
+
+@app.route('/follow', methods=['POST'])
+def follow():
+    try:
+        followto = request.form["followto"]
+        checkFollow = Connections.query.filter(Connections.fromProfile==session['username'], Connections.toProfile==followto).first()
+        if(checkFollow):
+            return jsonify({"status":False, "message":"Already Following this user"})
+
+        connect = Connections(fromProfile=session["username"], toProfile=followto)
+        mysql.session.add(connect)
+        mysql.session.commit()
+
+        return jsonify({"status":True, "message":"Successfully added this user into your connection."})
+
+    except Exception as E:
+        return jsonify({"status":False, "message":E})
