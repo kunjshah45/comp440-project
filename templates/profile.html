@@ -1,17 +1,23 @@
 {% extends 'layout.html' %}
 
-{% block title %}Profile{% endblock %}       
-        
+{% block title %}Profile{% endblock %}
+
 {% block content %}
 <br>
 <br>
 <br>
-        <h1>User: abc</h1>        
-        <p>Hobby : </p>
-        <p>Last seen on: <span class="" data-timestamp="2022-04-23T07:44:18Z" data-format="format('LLL')" data-refresh="0">April 23, 2022 12:44 AM</span></p>
+<h1>Username: {{account.username}}</h1>
+<p>Name : {{account.firstName}} {{account.lastName}}</p>
+<p>Email : {{account.email}}</p>
+<p>Hobbies : {{account.hobbies and account.hobbies.replace("_", " ")}}</p>
 
-        <p>0 followers, 0 following.</p>
+<p>Last seen on: <span class="" data-timestamp="2022-04-23T07:44:18Z" data-format="format('LLL')" data-refresh="0">April
+        23, 2022 12:44 AM</span></p>
 
-        <p><a href="/edit_profile">Edit your profile</a></p>
+<p>{{followers}} followers, {{following}} following.</p>
+
+{% if session['username']==account.username %}
+<p><a href="/dashboard">Edit your profile</a></p>
+{% endif %}
 
 {% endblock %}
