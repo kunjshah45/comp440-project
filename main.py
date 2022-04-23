@@ -145,6 +145,7 @@ def register():
 @app.route('/')
 def index():
     posts = Posts.query.order_by(Posts.date.desc()).all()
+  
     return render_template('index.html', posts=posts)
 
 @app.route('/logout')
@@ -290,7 +291,7 @@ def profile(username):
     following = Connections.query.filter_by(fromProfile=session['username']).count()
     followers = Connections.query.filter_by(toProfile=session['username']).count()
     account = Users.query.filter_by(username=username).first()
-    posts = Posts.query.filter_by(author=session['username']).order_by(Posts.date.desc()).all() 
+    posts = Posts.query.filter_by(author=username).order_by(Posts.date.desc()).all() 
     return render_template('profile.html', account=account, following=following, followers=followers, posts=posts)
 
 @app.route('/follow', methods=['POST'])
