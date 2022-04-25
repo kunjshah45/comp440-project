@@ -4,7 +4,7 @@ from flask import Flask, flash, jsonify, render_template, request, redirect, url
 # from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
-from sqlalchemy import text
+from sqlalchemy import text, select
 from datetime import date, datetime
 import MySQLdb.cursors
 import re
@@ -279,10 +279,12 @@ def initBlogs():
      
 @app.route('/allfiles')
 def allfiles():
-    print(Posts.query.get(Posts.author).distinct().all())
-    query6 = Users.query.filter(Users.username.not_in()).all()
-    print(query6)
-    return render_template('allFiles.html')
+    a = Posts.query.with_entities(Posts.author).distinct().all()
+    ll = []
+    for x in a:
+        ll.append(x[0])
+    query6 = Users.query.filter(Users.username.not_in(ll)).all()
+    return render_template('allFiles.html', query6=query6)
 
 @app.route('/profile/<username>')
 def profile(username):
