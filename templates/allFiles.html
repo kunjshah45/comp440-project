@@ -131,8 +131,8 @@
             .then(response => response.text())
             .then(result => {
                 result = JSON.parse(result)
-                console.log("v xsikm, dwxs")
-                console.log(result[result["query"]])
+                
+                console.log("hello",result[result["query"]])
                 if (result["query"]) {
                     queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
                     alert(result[result["query"]]);
