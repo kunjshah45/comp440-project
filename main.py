@@ -335,13 +335,28 @@ def allfiles():
                 print(query)
                 return jsonify(query)
             elif(request.json['query'] == "query2"):
-                pass
+                query["query"] = "query2"
+                query["query2"] = "query2 op goes here"
             elif(request.json['query'] == "query3"):
-                pass
+                query["query"] = "query3"
+                query["query3"] = "query3 op goes here"
+                return jsonify(query)
             elif(request.json['query'] == "query4"):
-                pass
+                val1 = request.json["q4input1"]
+                val2 = request.json["q4input2"]
+
+                print(val1, val2)
+                query["query"] = "query4"
+                query["query4"] = "query4 op goes here"
+                return jsonify(query)
             elif(request.json['query'] == "query5"):
-                pass
+                val1 = request.json["q5input1"]
+                val2 = request.json["q5input2"]
+
+                print(val1, val2)
+                query["query"] = "query5"
+                query["query5"] = "query5 op goes here"
+                return jsonify(query)
             elif(request.json['query'] == "query6"):
                 a = Posts.query.with_entities(Posts.author).distinct().all()
                 ll = []
@@ -356,11 +371,17 @@ def allfiles():
                 query["query6"] = op
                 return jsonify(query)
             elif(request.json['query'] == "query7"):
+                query["query"] = "query7"
+                query["query7"] = "query7 op goes here"
                 return jsonify(query)
             elif(request.json['query'] == "query8"):
-                pass
+                query["query"] = "query8"
+                query["query8"] = "query8 op goes here"
+                return jsonify(query)
             elif(request.json['query'] == "query9"):
-                pass
+                query["query"] = "query9"
+                query["query9"] = "query9 op goes here"
+                return jsonify(query)
     except Exception as E:
         return jsonify({"error": str(E)})
             
