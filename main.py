@@ -244,7 +244,10 @@ def edit(blogid):
                 tags = request.form['tags']
 
                 if blogid=='0':
-                    blogCheck = Posts.query.filter_by(author = session['username']).all()
+                    dt = date.today()
+                    dateToCheck = datetime.combine(dt, datetime.min.time())
+
+                    blogCheck = Posts.query.filter(Posts.author == session['username'], Posts.date > dateToCheck).all()
                     if(len(blogCheck)< 2):
                         post = Posts(title = title, slug = slug, content = content, author = session['username'], tags = tags)
                         mysql.session.add(post)
@@ -297,34 +300,56 @@ def initBlogs():
      
 @app.route('/allfiles', methods=['GET', 'POST'])
 def allfiles():
-    query = {}
-    if request.method == 'POST':
-        if(request.json['query'] == "query6"):
-            a = Posts.query.with_entities(Posts.author).distinct().all()
-            ll = []
-            for x in a:
-                ll.append(x[0])
-            data = Users.query.filter(Users.username.not_in(ll)).all()
-            
-            op = []
-            for row in data:
-                op.append(object_as_dict(row))
-            query["query"] = "query6"
-            query["query6"] = op
-            return jsonify(query)
-        if(request.json['query'] == "query7"):
-            a = Posts.query.with_entities(Posts.author).distinct().all()
-            ll = []
-            for x in a:
-                ll.append(x[0])
-            data = Users.query.filter(Users.username.not_in(ll)).all()
-            
-            op = []
-            for row in data:
-                op.append(object_as_dict(row))
-            query["query"] = "query7"
-            query["query7"] = op
-            return jsonify(query)
+    try:
+        query = {}
+    
+        if request.method == 'POST':
+
+            if(request.json['query'] == "query1"):
+                val1 = request.json["q1input1"]
+                val1 = "%{}%".format(val1)
+                val2 = request.json["q1input2"]
+                val2 = "%{}%".format(val2)
+
+                posts = Posts.query.filter(Posts.tags.like(val1), Posts.tags.like(val2)).all()
+
+                op = []
+                for row in posts:
+                    op.append(object_as_dict(row))
+
+                query["query"] = "query1"
+                query["query1"] = op
+                print(query)
+                return jsonify(query)
+            elif(request.json['query'] == "query2"):
+                pass
+            elif(request.json['query'] == "query3"):
+                pass
+            elif(request.json['query'] == "query4"):
+                pass
+            elif(request.json['query'] == "query5"):
+                pass
+            elif(request.json['query'] == "query6"):
+                a = Posts.query.with_entities(Posts.author).distinct().all()
+                ll = []
+                for x in a:
+                    ll.append(x[0])
+                data = Users.query.filter(Users.username.not_in(ll)).all()
+                
+                op = []
+                for row in data:
+                    op.append(object_as_dict(row))
+                query["query"] = "query6"
+                query["query6"] = op
+                return jsonify(query)
+            elif(request.json['query'] == "query7"):
+                return jsonify(query)
+            elif(request.json['query'] == "query8"):
+                pass
+            elif(request.json['query'] == "query9"):
+                pass
+    except Exception as E:
+        return jsonify({"error": str(E)})
             
     return render_template('allFiles.html', query=query)
 
