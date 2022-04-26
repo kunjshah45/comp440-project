@@ -7,13 +7,13 @@
 <h2>1) List the users who post at least two blogs, one has a tag of “X”, and another has a
     tag of “Y”</h2>
 <div style="display: flex; justify-content: space-around;">
-    <form id="query1" method="post">
+    <form method="post" class="form-inline my-2 my-lg-0">
         <input name="query" type="hidden" value="query1">
         <input name="q1input1" id="q1input1" class="form-control mr-sm-2" type="search" placeholder="Search for Tag X"
             aria-label="Search">
         <input name="q1input2" id="q1input2" class="form-control mr-sm-2" type="search" placeholder="Search for Tag Y"
             aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" onclick="query1(event);" type="submit">Search</button>
+        <button class="btn btn-outline-success my-2 my-sm-0" onclick="query1(event);" type="button">Search</button>
     </form>
 </div>
 
@@ -25,8 +25,9 @@
 
 <h2>2) All the blogs of user such that all the comments are positive for these blogs.</h2>
 <form class="form-inline my-2 my-lg-0">
-    <input class="form-control mr-sm-2" type="search" placeholder="Search for User X" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    <input class="form-control mr-sm-2" name="q2input1" type="search" placeholder="Search for User X"
+        aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="query2(event);">Search</button>
 </form>
 <table class="table">
     <thead>
@@ -50,101 +51,244 @@
 </table>
 <p id="query2"></p>
 
-<h2>3) the users who posted the most number of blogs on 5/1/2022; if there is a tie, list all the users who have a tie.
-</h2>
+<a href="" onclick="query3(event)">
+    <h2>3) the users who posted the most number of blogs on 5/1/2022; if there is a tie, list all the users who have a
+        tie.
+    </h2>
+</a>
 <p id="query3"></p>
+
 
 <h2>4) List the users who are followed by both X and Y. Usernames X and Y are inputs
     from the user </h2>
 <div style="display: flex; justify-content: space-around;">
     <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search for User X" aria-label="Search">
+        <input name="q4input1" id="q4input1" class="form-control mr-sm-2" type="search" placeholder="Search for User X"
+            aria-label="Search">
 
-        <input class="form-control mr-sm-2" type="search" placeholder="Search for User Y" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <input name="q4input2" id="q4input2" class="form-control mr-sm-2" type="search" placeholder="Search for User Y"
+            aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" onclick="query4(event);" type="button">Search</button>
     </form>
+    <br>
     <p id="query4"></p>
 </div>
 
 <h2>5) A user pair (A, B) such that they have at least one common hobby. </h2>
 <div style="display: flex; justify-content: space-around;">
     <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="User A" aria-label="Search">
-        <input class="form-control mr-sm-2" type="search" placeholder="User B" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <input name="q5input1" id="q5input1" class="form-control mr-sm-2" type="search" placeholder="User A"
+            aria-label="Search">
+        <input name="q5input2" id="q5input2" class="form-control mr-sm-2" type="search" placeholder="User B"
+            aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" onclick="query5(event);" type="button">Search</button>
     </form>
     <p id="query5"></p>
 </div>
 
-<h2><a href="" onclick="query6(event)">6) All the users who never posted a blog</a></h2>
+<a href="" onclick="query6(event)">
+    <h2>6) All the users who never posted a blog</h2>
+</a>
 <p id="query6"></p>
 
-<h2><a href="" onclick="query(event, 7)">7) All the users who never posted a comment</a></h2>
+<a href="" onclick="query7(event)">
+    <h2>7) All the users who never posted a comment</h2>
+</a>
 <p id="query7"></p>
 
-<h2><a href="" onclick="query(event,8)">8) All the users who posted some comments, but each of them is negative. </a>
-</h2>
+<a href="" onclick="query8(event)">
+    <h2>8) All the users who posted some comments, but each of them is negative.
+    </h2>
+</a>
 <p id="query8"></p>
 
-<h2><a href="" onclick="query(event,9)">9) Those users such that all the blogs they posted so far never received any
-        negative comments</a></h2>
+<a href="" onclick="query9(event)">
+    <h2>9) Those users such that all the blogs they posted so far never received any
+        negative comments</h2>
+    <p id="query9"></p>
+</a>
 
 <script>
     function query1(e) {
         e.preventDefault();
-        console.log("1");
         let val1 = document.getElementById("q1input1").value;
         let val2 = document.getElementById("q1input2").value;
-        console.log("2");
 
         params = { "query": "query1", "q1input1": val1, "q1input2": val2 }
 
-        query(e, params = params)
+        result = query(e, params = params)
+        result.then(result => {
+            result = JSON.parse(result)
+            if (result["query"]) {
+                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+            }
+            if (result["error"]) {
+                alert(result["error"]);
+            }
+        }).catch(error => {
+            document.getElementById("afterMessage").innerHTML = "Error" + error;
+        });
+
+    }
+    function query2(e) {
+        val1 = document.getElementById("q2input1").value;
+        params = { "query": "query2", "q2input1": val1 }
+        result = query(e, params = params)
+        result.then(result => {
+            result = JSON.parse(result)
+            if (result["query"]) {
+                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+            }
+            if (result["error"]) {
+                alert(result["error"]);
+            }
+        }).catch(error => {
+            document.getElementById("afterMessage").innerHTML = "Error" + error;
+        });
+    }
+
+    function query3(e) {
+        e.preventDefault();
+        params = { "query": "query3" }
+        result = query(e, params = params)
+        result.then(result => {
+            result = JSON.parse(result)
+            print(result)
+            if (result["query"]) {
+                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+            }
+            if (result["error"]) {
+                alert(result["error"]);
+            }
+        }).catch(error => {
+            document.getElementById("afterMessage").innerHTML = "Error" + error;
+        });
+    }
+    function query4(e) {
+        e.preventDefault();
+        let val1 = document.getElementById("q4input1").value;
+        let val2 = document.getElementById("q4input2").value;
+
+        params = { "query": "query4", "q4input1": val1, "q4input2": val2 }
+        console.log(params);
+
+        result = query(e, params = params)
+        result.then(result => {
+            result = JSON.parse(result)
+            if (result["query"]) {
+                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+            }
+            if (result["error"]) {
+                alert(result["error"]);
+            }
+        }).catch(error => {
+            document.getElementById("afterMessage").innerHTML = "Error" + error;
+        });
+
+    }
+    function query5(e) {
+        e.preventDefault();
+        let val1 = document.getElementById("q5input1").value;
+        let val2 = document.getElementById("q5input2").value;
+
+        params = { "query": "query5", "q5input1": val1, "q5input2": val2 }
+
+        result = query(e, params = params)
+        result.then(result => {
+            result = JSON.parse(result)
+            if (result["query"]) {
+                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+            }
+            if (result["error"]) {
+                alert(result["error"]);
+            }
+        }).catch(error => {
+            document.getElementById("afterMessage").innerHTML = "Error" + error;
+        });
+
     }
     function query6(e) {
         e.preventDefault();
         params = { "query": "query6" }
 
-        query(e, params = params)
+        result = query(e, params = params)
+        result.then(result => {
+            result = JSON.parse(result)
+            if (result["query"]) {
+                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+            }
+            if (result["error"]) {
+                alert(result["error"]);
+            }
+        }).catch(error => {
+            document.getElementById("afterMessage").innerHTML = "Error" + error;
+        });
     }
-    function query(e, params, val) {
+    function query7(e) {
+        e.preventDefault();
+        params = { "query": "query7" }
 
+        result = query(e, params = params)
+        result.then(result => {
+            result = JSON.parse(result)
+            if (result["query"]) {
+                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+            }
+            if (result["error"]) {
+                alert(result["error"]);
+            }
+        }).catch(error => {
+            document.getElementById("afterMessage").innerHTML = "Error" + error;
+        });
+    }
+
+    function query8(e) {
+        e.preventDefault();
+        params = { "query": "query8" }
+
+        result = query(e, params = params)
+        result.then(result => {
+            result = JSON.parse(result)
+            if (result["query"]) {
+                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+            }
+            if (result["error"]) {
+                alert(result["error"]);
+            }
+        }).catch(error => {
+            document.getElementById("afterMessage").innerHTML = "Error" + error;
+        });
+    }
+    function query9(e) {
+        e.preventDefault();
+        params = { "query": "query9" }
+
+        result = query(e, params = params)
+        result.then(result => {
+            result = JSON.parse(result)
+            if (result["query"]) {
+                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+            }
+            if (result["error"]) {
+                alert(result["error"]);
+            }
+        }).catch(error => {
+            document.getElementById("afterMessage").innerHTML = "Error" + error;
+        });
+    }
+    function query(e, params) {
         var params = params
-
-        console.log("query param", params, val)
-
         const url = "/allfiles";
-
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-
         var requestOptions = {
             method: 'POST',
             headers: myHeaders,
             body: JSON.stringify(params),
             redirect: 'follow'
         };
-
-        console.log(JSON.stringify(params))
-
-        fetch(url, requestOptions)
+        return fetch(url, requestOptions)
             .then(response => response.text())
-            .then(result => {
-                result = JSON.parse(result)
-                
-                console.log("hello",result[result["query"]])
-                if (result["query"]) {
-                    queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
-                    alert(result[result["query"]]);
-                }
-                if (result["error"]) {
-                    alert(result["error"]);
-                }
-            })
-            .catch(error => {
-                document.getElementById("afterMessage").innerHTML = "Error" + error;
-            });
-
     }
 </script>
 

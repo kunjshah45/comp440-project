@@ -6,34 +6,35 @@
 <br>
 <br>
 <br>
-    <div style="display: flex; flex-direction: column; justify-content: flex-start;">
-        <h1>Username: {{account.username}}</h1>
-        <p>Name : {{account.firstName}} {{account.lastName}}</p>
-        <p>Email : {{account.email}}</p>
-        <p>Hobbies : {{account.hobbies and account.hobbies.replace("_", " ")}}</p>
-        
-        <p>{{followers}} followers, {{following}} following.</p>
-        <div style="display: flex; ">
-            {% if 1==1 %}
-                <button type="button" style="margin-right: 60px;" class="btn btn-outline-primary">Follow</button>
-            {% else %}
-                <button type="button" class="btn btn-outline-danger">unFollow</button>
-            {% endif %}
-        </div>
-        {% if session['username']==account.username %}
-            <button type="button" style=" margin-top: 10px; width: 50%; " class="btn btn-outline-primary"><a style="text-decoration: none; color:black;" href="/dashboard">Edit your profile</a></button>
+<div style="display: flex; flex-direction: column; justify-content: flex-start;">
+    <h1>Username: {{account.username}}</h1>
+    <p>Name : {{account.firstName}} {{account.lastName}}</p>
+    <p>Email : {{account.email}}</p>
+    <p>Hobbies : {% for each in hobbies %} {{each.hobby.hobbyName}} {% endfor %}</p>
+
+    <p>{{followers}} followers, {{following}} following.</p>
+    <div style="display: flex; ">
+        {% if 1==1 %}
+        <button type="button" style="margin-right: 60px;" class="btn btn-outline-primary">Follow</button>
+        {% else %}
+        <button type="button" class="btn btn-outline-danger">unFollow</button>
         {% endif %}
     </div>
-    {% for posts in posts %}
-        <article class="blog-page">
-            <h2 class="h2 text-uppercase"><a href="/" style="text-decoration: none;">{{posts.title}}</a></h2>
-            <p class="blog-content-date" style="font-size: 15px;">Posted</a></span> On <i
-              style="color: darkgrey;">{{posts.date.strftime('%b %d, %Y')}}</i>
-            <span style="display: flex; float: right; color: rgb(15, 11, 19); font-size: 17px; font-weight: 600;"><i
+    {% if session['username']==account.username %}
+    <button type="button" style=" margin-top: 10px; width: 50%; " class="btn btn-outline-primary"><a
+            style="text-decoration: none; color:black;" href="/dashboard">Edit your profile</a></button>
+    {% endif %}
+</div>
+{% for posts in posts %}
+<article class="blog-page">
+    <h2 class="h2 text-uppercase"><a href="/" style="text-decoration: none;">{{posts.title}}</a></h2>
+    <p class="blog-content-date" style="font-size: 15px;">Posted</a></span> On <i
+            style="color: darkgrey;">{{posts.date.strftime('%b %d, %Y')}}</i>
+        <span style="display: flex; float: right; color: rgb(15, 11, 19); font-size: 17px; font-weight: 600;"><i
                 class="far fa-eye"> {{posts.views}}</i> &nbsp;&nbsp;&nbsp;&nbsp; </span>
-            </p>
-            <hr>
-        </article>
-      {% endfor %}
+    </p>
+    <hr>
+</article>
+{% endfor %}
 
 {% endblock %}
