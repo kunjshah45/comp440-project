@@ -281,7 +281,7 @@ def dashboard():
                 mysql.session.commit()
 
         myPost = Posts.query.filter_by(author=session['username']).all()
-        account = Users.query.filter_by(username=session["username"]).first()
+        account = Users.query.filter_by(username=session['username']).first()
         return render_template("dashboard.html",posts=myPost, account=account)
     except Exception as E:
         print(E)
