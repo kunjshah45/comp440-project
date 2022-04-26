@@ -2,6 +2,8 @@
 {% block content %}
 <br>
 <br>
+<div class="form-submission-text" id="afterMessage"></div>
+
 <h2>1) List the users who post at least two blogs, one has a tag of “X”, and another has a
     tag of “Y”</h2>
 <div style="display: flex; justify-content: space-around;">
@@ -68,15 +70,55 @@
     </form>
 </div>
 
-<h2>6) All the users who never posted a blog</h2>
+<h2><a href="" onclick="query(event,6)">6) All the users who never posted a blog</a></h2>
+<p id="query6"></p>
 
-<h2>7) All the users who never posted a comment</h2>
+<h2><a href="" onclick="query(event,7)">7) All the users who never posted a comment</a></h2>
+<p id="query7"></p>
 
-<h2>8) All the users who posted some comments, but each of them is negative. </h2>
+<h2><a href="" onclick="query(event,8)">8) All the users who posted some comments, but each of them is negative. </a>
+</h2>
 
-<h2>9) Those users such that all the blogs they posted so far never received any
-    negative comments</h2>
+<h2><a href="" onclick="query(event,9)">9) Those users such that all the blogs they posted so far never received any
+        negative comments</a></h2>
 
+<script>
+    function query(e, val) {
+        e.preventDefault();
+
+        var params = {
+            "query": "query" + val,
+        }
+
+        console.log("query param")
+
+        const url = "/allfiles";
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: JSON.stringify(params),
+            redirect: 'follow'
+        };
+
+        fetch(url, requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                result = JSON.parse(result)
+                console.log(result[result["query"]])
+                if (result["query"]) {
+                    queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+                }
+            })
+            .catch(error => {
+                document.getElementById("afterMessage").innerHTML = "Error" + error;
+            });
+
+    }
+</script>
 
 
 

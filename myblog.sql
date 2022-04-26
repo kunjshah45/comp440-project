@@ -3,6 +3,13 @@ SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
+DROP TABLE IF EXISTS `hobbies`;
+CREATE TABLE `hobbies` (
+  `hid` int(11) NOT NULL AUTO_INCREMENT,
+  `hobbyName` varchar(80) NOT NULL,
+  PRIMARY KEY (`hid`),
+)
+
 DROP TABLE IF EXISTS `connections`;
 CREATE TABLE `connections` (
   `cid` int(11) NOT NULL AUTO_INCREMENT,
@@ -12,20 +19,19 @@ CREATE TABLE `connections` (
   PRIMARY KEY (`cid`),
   FOREIGN KEY (`fromProfile`) REFERENCES Users(`username`),
   FOREIGN KEY (`toProfile`) REFERENCES Users(`username`)
-)
+);
 
 INSERT INTO `connections` (`cid`, `fromProfile`, `toProfile`,`date`) VALUES
 (1, 'kunjshah', 'kunjshah45', '2022-04-23 03:01:28'),
 (2, 'kunjshah45', 'kunjshah', '2022-04-23 03:01:28');
 
-
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `email` varchar(100) NOT NULL,
   `password` varchar(500) NOT NULL,
   `firstName` varchar(100) NOT NULL,
   `lastName` varchar(50) NOT NULL,
   `username` varchar(100) NOT NULL,
-  `hobbies` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`username`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
