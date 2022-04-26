@@ -26,8 +26,8 @@
       <form accept="/dashboard" method="post">
         <div class="form-group">
           <label for="exampleInputEmail1">Add Your Hobby</label>
-          <input type="text" value='{{account.hobbies.replace("_", " ")}}' class="form-control" name="hobbies"
-            aria-describedby="emailHelp" placeholder="Enter your hobby">
+          <input type="text" value='{{account.hobbies and account.hobbies.replace("_", " ")}}' class="form-control"
+            name="hobbies" aria-describedby="emailHelp" placeholder="Enter your hobby">
           <small id="emailHelp" class="form-text text-muted">Enter your hobby</small>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>

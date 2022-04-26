@@ -2,83 +2,124 @@
 {% block content %}
 <br>
 <br>
-    <h2>1) List the users who post at least two blogs, one has a tag of “X”, and another has a 
-        tag of “Y”</h2>
-        <div style="display: flex; justify-content: space-around;">
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search for Tag X" aria-label="Search">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search for Tag Y" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
-    
-        <div>
-            <p>
-                {{ 'Search Results' }}
-            </p>
-        </div>
+<div class="form-submission-text" id="afterMessage"></div>
+
+<h2>1) List the users who post at least two blogs, one has a tag of “X”, and another has a
+    tag of “Y”</h2>
+<div style="display: flex; justify-content: space-around;">
+    <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search for Tag X" aria-label="Search">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search for Tag Y" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+</div>
+
+<div>
+    <p>
+        {{ 'Search Results' }}
+    </p>
+</div>
 
 
-
-
-    <h2>2) All the blogs of user such that all the comments are positive for these blogs.</h2>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search for User X" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-        <table class="table">
-            <thead>
-            <tr>
+<h2>2) All the blogs of user such that all the comments are positive for these blogs.</h2>
+<form class="form-inline my-2 my-lg-0">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search for User X" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+</form>
+<table class="table">
+    <thead>
+        <tr>
             <th>Blogs</th>
             <th>Comments</th>
-            </tr>
-            </thead>
-            <tbody>
-                        <tr>
-                        {% for post in posts %}
-                            <td>{{post.title}}</td>
-                        {% endfor %}
-                        {% for comment in commmets %}
-                            <td>{{comments.message}}</td>
-                        {% endfor %}
-                        </tr>   
-            
-            
-            </tbody>
-        </table>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {% for post in posts %}
+            <td>{{post.title}}</td>
+            {% endfor %}
+            {% for comment in commmets %}
+            <td>{{comments.message}}</td>
+            {% endfor %}
+        </tr>
 
-        <h2>3) the users who posted the most number of blogs on 5/1/2022; if there is a tie, list all the users who have a tie.</h2>
 
-        <h2>4) List the users who are followed by both X and Y. Usernames X and Y are inputs 
-            from the user </h2>
-        <div style="display: flex; justify-content: space-around;">
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search for User X" aria-label="Search">
-            
-                <input class="form-control mr-sm-2" type="search" placeholder="Search for User Y" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
+    </tbody>
+</table>
 
-        <h2>5) A user pair (A, B) such that they have at least one common hobby. </h2>
-        <div style="display: flex; justify-content: space-around;">
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="User A" aria-label="Search">
-                <input class="form-control mr-sm-2" type="search" placeholder="User B" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
+<h2>3) the users who posted the most number of blogs on 5/1/2022; if there is a tie, list all the users who have a tie.
+</h2>
 
-        <h2>6) All the users who never posted a blog</h2>
+<h2>4) List the users who are followed by both X and Y. Usernames X and Y are inputs
+    from the user </h2>
+<div style="display: flex; justify-content: space-around;">
+    <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search for User X" aria-label="Search">
 
-        <h2>7) All the users who never posted a comment</h2>
+        <input class="form-control mr-sm-2" type="search" placeholder="Search for User Y" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+</div>
 
-        <h2>8) All the users who posted some comments, but each of them is negative. </h2>
+<h2>5) A user pair (A, B) such that they have at least one common hobby. </h2>
+<div style="display: flex; justify-content: space-around;">
+    <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="User A" aria-label="Search">
+        <input class="form-control mr-sm-2" type="search" placeholder="User B" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+</div>
 
-        <h2>9) Those users such that all the blogs they posted so far never received any 
-            negative comments</h2>
-       
-           
-           
+<h2><a href="" onclick="query(event,6)">6) All the users who never posted a blog</a></h2>
+<p id="query6"></p>
 
-  {% endblock %}
+<h2><a href="" onclick="query(event,7)">7) All the users who never posted a comment</a></h2>
+<p id="query7"></p>
+
+<h2><a href="" onclick="query(event,8)">8) All the users who posted some comments, but each of them is negative. </a>
+</h2>
+
+<h2><a href="" onclick="query(event,9)">9) Those users such that all the blogs they posted so far never received any
+        negative comments</a></h2>
+
+<script>
+    function query(e, val) {
+        e.preventDefault();
+
+        var params = {
+            "query": "query" + val,
+        }
+
+        console.log("query param")
+
+        const url = "/allfiles";
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: JSON.stringify(params),
+            redirect: 'follow'
+        };
+
+        fetch(url, requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                result = JSON.parse(result)
+                console.log(result[result["query"]])
+                if (result["query"]) {
+                    queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+                }
+            })
+            .catch(error => {
+                document.getElementById("afterMessage").innerHTML = "Error" + error;
+            });
+
+    }
+</script>
+
+
+
+{% endblock %}

@@ -4,7 +4,7 @@ from flask import Flask, flash, jsonify, render_template, request, redirect, url
 # from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
-from sqlalchemy import text
+from sqlalchemy import text, select, inspect
 from datetime import date, datetime
 import MySQLdb.cursors
 import re
@@ -32,8 +32,16 @@ class Users(mysql.Model):
     firstName = mysql.Column(mysql.String(12), nullable=False)
     lastName = mysql.Column(mysql.String(120), nullable=False)
     username = mysql.Column(mysql.String(12), primary_key=True)
-    hobbies = mysql.Column(mysql.String(80), nullable=False)
-    
+
+class UserHobbies(mysql.Model):
+    uhid = mysql.Column(mysql.Integer, primary_key=True)
+    hobbyId = mysql.Column(mysql.Integer, mysql.ForeignKey('hobbies.hid'), nullable=False)
+    username = mysql.Column(mysql.Integer, mysql.ForeignKey('users.username'), nullable=False)
+
+class Hobbies(mysql.Model):
+    hid = mysql.Column(mysql.Integer, primary_key=True)
+    hobbyName = mysql.Column(mysql.String(80), nullable=False)
+ 
 class Connections(mysql.Model):
     cid = mysql.Column(mysql.Integer, primary_key=True)
     fromProfile = mysql.Column(mysql.Integer, mysql.ForeignKey('users.username'), nullable=False)
@@ -58,6 +66,12 @@ class Posts(mysql.Model):
     date = mysql.Column(mysql.String(12), nullable=True, default=datetime.now)
     views = mysql.Column(mysql.Integer, default=0)
 
+# class Tags(mysql.Model):
+#     tid = mysql.Column(mysql.Integer, primary_key=True)
+#     postId = mysql.Column(mysql.Integer, mysql.ForeignKey('posts.sno'), nullable=False)
+#     tagName = mysql.Column(mysql.String(50), nullable=False)
+#     datetime = mysql.Column(mysql.DateTime, nullable=True, default=datetime.now) 
+
 class Comments(mysql.Model):
     cid = mysql.Column(mysql.Integer, primary_key=True)
     postid = mysql.Column(mysql.Integer, mysql.ForeignKey('posts.sno'), nullable=False) 
@@ -68,6 +82,11 @@ class Comments(mysql.Model):
 
 if __name__ == '__main__':
     app.run('0.0.0.0', 5000, debug=True, use_debugger=True, use_reloader=True)
+
+def object_as_dict(obj):
+    return {c.key: getattr(obj, c.key)
+            for c in inspect(obj).mapper.column_attrs}
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -112,7 +131,6 @@ def register():
         email = request.form['email']
         firstname = request.form['firstName']
         lastname = request.form['lastName']
-        # hobbies=request.form['hobbies']
         
         if(password == confirmPassword):
             msg = 'Account already exists!'
@@ -256,9 +274,7 @@ def dashboard():
     try:
         if request.method == 'POST':
             if 'loggedin' in session:
-                hobbies = request.form['hobbies'].replace(" ", "_")
                 account = Users.query.filter_by(username=session["username"]).first()
-                account.hobbies = hobbies
                 mysql.session.commit()
 
         myPost = Posts.query.filter_by(author=session['username']).all()
@@ -267,7 +283,7 @@ def dashboard():
     except Exception as E:
         print(E)
         return jsonify({"status": False, "message":"Error"})
-
+        
 @app.route('/initBlogs')
 def initBlogs():
     engine = create_engine(params['local_uri'], echo=True)
@@ -279,12 +295,38 @@ def initBlogs():
     posts = Posts.query.order_by(Posts.date.desc()).all()
     return render_template('index.html', posts=posts)
      
-@app.route('/allfiles')
+@app.route('/allfiles', methods=['GET', 'POST'])
 def allfiles():
-    # print(Posts.query.get(Posts.author).distinct().all())
-    # query6 = Users.query.filter(Users.username.not_in()).all()
-    # print(query6)
-    return render_template('allFiles.html')
+    query = {}
+    if request.method == 'POST':
+        if(request.json['query'] == "query6"):
+            a = Posts.query.with_entities(Posts.author).distinct().all()
+            ll = []
+            for x in a:
+                ll.append(x[0])
+            data = Users.query.filter(Users.username.not_in(ll)).all()
+            
+            op = []
+            for row in data:
+                op.append(object_as_dict(row))
+            query["query"] = "query6"
+            query["query6"] = op
+            return jsonify(query)
+        if(request.json['query'] == "query7"):
+            a = Posts.query.with_entities(Posts.author).distinct().all()
+            ll = []
+            for x in a:
+                ll.append(x[0])
+            data = Users.query.filter(Users.username.not_in(ll)).all()
+            
+            op = []
+            for row in data:
+                op.append(object_as_dict(row))
+            query["query"] = "query7"
+            query["query7"] = op
+            return jsonify(query)
+            
+    return render_template('allFiles.html', query=query)
 
 @app.route('/profile/<username>')
 def profile(username):
