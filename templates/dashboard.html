@@ -18,21 +18,7 @@
 <div class="container mx-auto">
   <div class="row">
     <div class="col-lg-10 col-md-10 mx-auto">
-      <h1>User Actions</h1>
 
-      <a href="/edit/0"> <button class="btn btn-outline-primary btn-md"> Add a new Blog</button></a>
-      <hr>
-      <h2>Edit Profile</h2>
-      <form accept="/dashboard" method="post">
-        <div class="form-group">
-          <label for="exampleInputEmail1">Add Your Hobby</label>
-          <input type="text" value='{{account.hobbies and account.hobbies.replace("_", " ")}}' class="form-control"
-            name="hobbies" aria-describedby="emailHelp" placeholder="Enter your hobby">
-          <small id="emailHelp" class="form-text text-muted">Enter your hobby</small>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-      <hr>
 
       <h2>Edit Blogs</h2>
       <table class="table">

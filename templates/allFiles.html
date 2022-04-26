@@ -111,8 +111,6 @@
 
         var params = params
 
-        console.log("query param", params, val)
-
         const url = "/allfiles";
 
         var myHeaders = new Headers();
@@ -125,17 +123,12 @@
             redirect: 'follow'
         };
 
-        console.log(JSON.stringify(params))
-
         fetch(url, requestOptions)
             .then(response => response.text())
             .then(result => {
                 result = JSON.parse(result)
-                console.log("v xsikm, dwxs")
-                console.log(result[result["query"]])
                 if (result["query"]) {
                     queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
-                    alert(result[result["query"]]);
                 }
                 if (result["error"]) {
                     alert(result["error"]);

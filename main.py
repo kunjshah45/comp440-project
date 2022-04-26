@@ -33,14 +33,15 @@ class Users(mysql.Model):
     lastName = mysql.Column(mysql.String(120), nullable=False)
     username = mysql.Column(mysql.String(12), primary_key=True)
 
+class Hobbies(mysql.Model):
+    hid = mysql.Column(mysql.Integer, primary_key=True)
+    hobbyName = mysql.Column(mysql.String(80), nullable=False)
+
 class UserHobbies(mysql.Model):
     uhid = mysql.Column(mysql.Integer, primary_key=True)
     hobbyId = mysql.Column(mysql.Integer, mysql.ForeignKey('hobbies.hid'), nullable=False)
     username = mysql.Column(mysql.Integer, mysql.ForeignKey('users.username'), nullable=False)
-
-class Hobbies(mysql.Model):
-    hid = mysql.Column(mysql.Integer, primary_key=True)
-    hobbyName = mysql.Column(mysql.String(80), nullable=False)
+    hobby = mysql.relationship(Hobbies, backref='user_hobbies')
  
 class Connections(mysql.Model):
     cid = mysql.Column(mysql.Integer, primary_key=True)
@@ -131,6 +132,7 @@ def register():
         email = request.form['email']
         firstname = request.form['firstName']
         lastname = request.form['lastName']
+        hobbies = request.form.getlist('hobbies')
         
         if(password == confirmPassword):
             msg = 'Account already exists!'
@@ -148,8 +150,15 @@ def register():
             else:
                 # Account doesnt exists and the form data is valid, now insert new account into users table
                 user = Users(email=email, password = hashedPassword, firstName = firstname, lastName=lastname, username = username)
-
                 mysql.session.add(user)
+                mysql.session.commit()
+
+                for eachHobbie in hobbies:
+                    userHobbies = UserHobbies(hobbyId=eachHobbie, username=username)
+                    mysql.session.add(userHobbies)
+                    mysql.session.commit()
+
+
                 mysql.session.commit()
                 msg = 'You have successfully registered!'
         else:
@@ -158,7 +167,8 @@ def register():
         # Form is empty... (no POST data)
         msg = 'Please fill out the form!'
     # Show registration form with message (if any)
-    return render_template('register.html', msg=msg)
+    hobbies = Hobbies.query.all()
+    return render_template('register.html', msg=msg, hobbies = hobbies)
 
 @app.route('/')
 def index():
@@ -315,7 +325,10 @@ def allfiles():
 
                 op = []
                 for row in posts:
-                    op.append(object_as_dict(row))
+                    temp = object_as_dict(row)
+                    if "content" in temp:
+                        del temp["content"]
+                    op.append(temp)
 
                 query["query"] = "query1"
                 query["query1"] = op
@@ -358,8 +371,9 @@ def profile(username):
     following = Connections.query.filter_by(fromProfile=session['username']).count()
     followers = Connections.query.filter_by(toProfile=session['username']).count()
     account = Users.query.filter_by(username=username).first()
-    posts = Posts.query.filter_by(author=username).order_by(Posts.date.desc()).all() 
-    return render_template('profile.html', account=account, following=following, followers=followers, posts=posts)
+    posts = Posts.query.filter_by(author=username).order_by(Posts.date.desc()).all()
+    hobbies = UserHobbies.query.filter_by(username=session["username"]).join(Hobbies).all()
+    return render_template('profile.html', account=account, following=following, followers=followers, posts=posts, hobbies=hobbies)
 
 @app.route('/follow', methods=['POST'])
 def follow():

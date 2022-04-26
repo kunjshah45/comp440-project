@@ -8,7 +8,25 @@ CREATE TABLE `hobbies` (
   `hid` int(11) NOT NULL AUTO_INCREMENT,
   `hobbyName` varchar(80) NOT NULL,
   PRIMARY KEY (`hid`),
-)
+);
+
+INSERT INTO `hobbies` (`hid`, `hobbyNamee`) VALUES
+(1, 'coding'),
+(2, 'reading'),
+(3, 'dancing'),
+(4, 'gardening'),
+(5, 'painting'),
+(6, 'exercise');
+
+DROP TABLE IF EXISTS `user_hobbies`;
+CREATE TABLE `user_hobbies` (
+  `uhid` int(11) NOT NULL AUTO_INCREMENT,
+  `hobbyId` int(11) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  PRIMARY KEY (`uhid`),
+  FOREIGN KEY (`hobbyId`) REFERENCES Hobbies(`hid`),
+  FOREIGN KEY (`username`) REFERENCES Users(`username`)
+);
 
 DROP TABLE IF EXISTS `connections`;
 CREATE TABLE `connections` (
