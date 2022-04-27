@@ -352,6 +352,7 @@ def allfiles():
                 for each in sample:
                     op.append(object_as_dict(each))
 
+                print(op)
                 query["query"] = "query4"
                 query["query4"] = op
                 return jsonify(query)
