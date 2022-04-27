@@ -2,6 +2,7 @@ from email import message
 from flask import Flask, flash, jsonify, render_template, request, redirect, url_for, session
 # from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy
 from sqlalchemy import create_engine, text, select, inspect
 from sqlalchemy.orm import aliased
 from datetime import date, datetime
@@ -327,14 +328,16 @@ def allfiles():
 
                 query["query"] = "query1"
                 query["query1"] = op
-                print(query)
                 return jsonify(query)
             elif(request.json['query'] == "query2"):
+
                 query["query"] = "query2"
                 query["query2"] = "query2 op goes here"
             elif(request.json['query'] == "query3"):
+                query3 = Posts.query.with_entities(sqlalchemy.func.count(), Posts.author).filter(Posts.date>"2022-04-26 00:00:00", Posts.date<"2022-04-26 23:59:59").group_by(Posts.author).all()
+                
                 query["query"] = "query3"
-                query["query3"] = "query3 op goes here"
+                query["query3"] = query3
                 return jsonify(query)
             elif(request.json['query'] == "query4"):
                 # select Distinct c1.toProfile from connections as c1 join connections as c2 on c1.toProfile = c2.toProfile and c1.fromProfile="kunjshah45" and c2.fromProfile="kunjshah";
@@ -352,7 +355,6 @@ def allfiles():
             elif(request.json['query'] == "query5"):
 
                 q5data = UserHobbies.query.join(UserHobbies.hobbyId).filter(UserHobbies.hobbyId.in_(Hobbies.query.with_entities(Hobbies.hid), UserHobbies.hobbyId))
-                print(q5data)
 
                 query["query"] = "query5"
                 query["query5"] = "query5 op goes here"
@@ -381,12 +383,18 @@ def allfiles():
                 query["query7"] = op
                 return jsonify(query)
             elif(request.json['query'] == "query8"):
-                # query8 = Users.query
+                # select DISTINCT username from comments where commentType = 0 and username not in (select username from comments where commentType=1);
+                
+                query8 = Comments.query.filter(Comments.username.not_in(Comments.query.with_entities(Comments.username).filter(Comments.commentType==1))).all()
+
+                op = []
+                for x in query8:
+                    op.append(object_as_dict(x))
+
                 query["query"] = "query8"
-                query["query8"] = "query8 op goes here"
+                query["query8"] = op
                 return jsonify(query)
             elif(request.json['query'] == "query9"):
-                # query9 = Users
                 query["query"] = "query9"
                 query["query9"] = "query9 op goes here"
                 return jsonify(query)
