@@ -50,7 +50,7 @@
 
 
 <a href="" onclick="query3(event)">
-    <h2>3) the users who posted the most number of blogs on 5/1/2022; if there is a tie, list all the users who have a
+    <h2>3) the users who posted the most number of blogs on 27/04/2022; if there is a tie, list all the users who have a
         tie.
     </h2>
 </a>
@@ -214,17 +214,17 @@
     }
     function query2(e) {
         e.preventDefault();
-         val1 = document.getElementById("q2input1").value;
-        
+        val1 = document.getElementById("q2input1").value;
+
         params = { "query": "query2", "q2input1": val1 }
         result = query(e, params = params)
 
-        console.log("hello",result)
+        console.log("hello", result)
         result.then(result => {
             result = JSON.parse(result)
             // console.log(result);
             if (result["query"]) {
-                queryResult =JSON.stringify(result[result["query"]]);
+                queryResult = JSON.stringify(result[result["query"]]);
                 var table = document.createElement("table"), row, cellA, cellB;
                 const data = JSON.parse(queryResult);
                 console.log("hello", data)
@@ -239,7 +239,7 @@
                     $("#myTable2").css("visibility", "visible");
                 }
                 for (var i = 0; i < data.length; i++) {
-                    var row =   `<tr>
+                    var row = `<tr>
                                     <td>${data[i].title}</td>     
                                  </tr>`
                     document.getElementById("myTable2").innerHTML += row
@@ -277,7 +277,7 @@
                 for (var i = 0; i < data.length; i++) {
 
                     var row = `<tr>
-                                    <td>${data[i].author}</td>
+                                    <td>${data[i].username}</td>
                             </tr>`
                     document.getElementById("myTable3").innerHTML += row
                 }

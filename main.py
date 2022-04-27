@@ -341,11 +341,12 @@ def allfiles():
                 query["query2"] = op
                 return jsonify(query)
             elif(request.json['query'] == "query3"):
-                query3 = Posts.query.with_entities(sqlalchemy.func.count(), Posts.author).filter(Posts.date>"2022-04-26 00:00:00", Posts.date<"2022-04-26 23:59:59").group_by(Posts.author).all()
+                query3 = Posts.query.with_entities(sqlalchemy.func.count(), Posts.author).filter(Posts.date>"2022-04-27 00:00:00", Posts.date<"2022-04-27 23:59:59").group_by(Posts.author).all()
                 op = []
                 for each in query3:
                     op.append({"len": each[0], "username":each[1]})
 
+                print(op)
                 query["query"] = "query3"
                 query["query3"] = op
                 return jsonify(query)
@@ -365,10 +366,11 @@ def allfiles():
                 return jsonify(query)
             elif(request.json['query'] == "query5"):
 
-                q5data = UserHobbies.query.join(UserHobbies.hobbyId).filter(UserHobbies.hobbyId.in_(Hobbies.query.with_entities(Hobbies.hid), UserHobbies.hobbyId))
+                # UserHobbies.hobbyId
+                q5data = UserHobbies.query.join(userHobbiesCopy.hobbyId, UserHobbies.hobbyId==userHobbiesCopy.hobbyId).filter(UserHobbies.hobbyId.in_(Hobbies.query.with_entities(Hobbies.hid))).all()
 
                 query["query"] = "query5"
-                query["query5"] = "query5 op goes here"
+                query["query5"] = q5data
                 return jsonify(query)
             elif(request.json['query'] == "query6"):
                 a = Posts.query.with_entities(Posts.author).distinct().all()
