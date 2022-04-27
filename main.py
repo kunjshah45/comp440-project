@@ -1,10 +1,9 @@
 from email import message
-from multiprocessing.connection import Connection
 from flask import Flask, flash, jsonify, render_template, request, redirect, url_for, session
 # from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
-from sqlalchemy import text, select, inspect
+from sqlalchemy import create_engine, text, select, inspect
+from sqlalchemy.orm import aliased
 from datetime import date, datetime
 import MySQLdb.cursors
 import re
@@ -49,14 +48,6 @@ class Connections(mysql.Model):
     toProfile = mysql.Column(mysql.Integer, mysql.ForeignKey('users.username'), nullable=False)
     date = mysql.Column(mysql.String(12), nullable=True, default=datetime.now)
 
-class Contacts(mysql.Model):
-    sno = mysql.Column(mysql.Integer, primary_key=True)
-    name = mysql.Column(mysql.String(80), nullable=False)
-    phone_num = mysql.Column(mysql.String(12), nullable=False)
-    msg = mysql.Column(mysql.String(120), nullable=False)
-    date = mysql.Column(mysql.String(12), nullable=True)
-    email = mysql.Column(mysql.String(20), nullable=False)
-
 class Posts(mysql.Model):
     sno = mysql.Column(mysql.Integer, primary_key=True)
     title = mysql.Column(mysql.String(80), nullable=False)
@@ -80,6 +71,10 @@ class Comments(mysql.Model):
     commentdate = mysql.Column(mysql.DateTime, nullable=True, default=datetime.now) 
     message = mysql.Column(mysql.String(550), nullable=False)
     commentType = mysql.Column(mysql.Boolean, nullable=False)
+
+connectionCopy = aliased(Connections)
+usersCopy = aliased(Users)
+userHobbiesCopy = aliased(UserHobbies)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', 5000, debug=True, use_debugger=True, use_reloader=True)
@@ -342,18 +337,23 @@ def allfiles():
                 query["query3"] = "query3 op goes here"
                 return jsonify(query)
             elif(request.json['query'] == "query4"):
+                # select Distinct c1.toProfile from connections as c1 join connections as c2 on c1.toProfile = c2.toProfile and c1.fromProfile="kunjshah45" and c2.fromProfile="kunjshah";
                 val1 = request.json["q4input1"]
                 val2 = request.json["q4input2"]
 
-                print(val1, val2)
+                sample = Connections.query.join(connectionCopy, Connections.toProfile==connectionCopy.toProfile).filter(connectionCopy.fromProfile==val1, Connections.fromProfile==val2).all()
+                op = []
+                for each in sample:
+                    op.append(object_as_dict(each))
+
                 query["query"] = "query4"
-                query["query4"] = "query4 op goes here"
+                query["query4"] = op
                 return jsonify(query)
             elif(request.json['query'] == "query5"):
-                val1 = request.json["q5input1"]
-                val2 = request.json["q5input2"]
 
-                print(val1, val2)
+                q5data = UserHobbies.query.join(UserHobbies.hobbyId).filter(UserHobbies.hobbyId.in_(Hobbies.query.with_entities(Hobbies.hid), UserHobbies.hobbyId))
+                print(q5data)
+
                 query["query"] = "query5"
                 query["query5"] = "query5 op goes here"
                 return jsonify(query)
@@ -371,18 +371,27 @@ def allfiles():
                 query["query6"] = op
                 return jsonify(query)
             elif(request.json['query'] == "query7"):
+                # SELECT * from users where username not in (SELECT DISTINCT username from comments);
+                query7 = Users.query.filter(Users.username.not_in(Comments.query.with_entities(Comments.username).distinct())).all()
+                op = []
+                
+                for eachComment in query7:
+                    op.append(object_as_dict(eachComment))
                 query["query"] = "query7"
-                query["query7"] = "query7 op goes here"
+                query["query7"] = op
                 return jsonify(query)
             elif(request.json['query'] == "query8"):
+                # query8 = Users.query
                 query["query"] = "query8"
                 query["query8"] = "query8 op goes here"
                 return jsonify(query)
             elif(request.json['query'] == "query9"):
+                # query9 = Users
                 query["query"] = "query9"
                 query["query9"] = "query9 op goes here"
                 return jsonify(query)
     except Exception as E:
+        print(E)
         return jsonify({"error": str(E)})
             
     return render_template('allFiles.html', query=query)

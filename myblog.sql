@@ -40,8 +40,14 @@ CREATE TABLE `connections` (
 );
 
 INSERT INTO `connections` (`cid`, `fromProfile`, `toProfile`,`date`) VALUES
-(1, 'kunjshah', 'kunjshah45', '2022-04-23 03:01:28'),
-(2, 'kunjshah45', 'kunjshah', '2022-04-23 03:01:28');
+(3, 'kunjshah45', '111', '2022-04-23 03:01:28'),
+(5, 'kunjshah', '111', '2022-04-23 03:01:28'),
+(6, 'kunjshah45', 'test1', '2022-04-23 03:01:28'),
+(7, 'kunjshah', 'test1', '2022-04-23 03:01:28'),
+(8, 'kunjshah45', 'qaz', '2022-04-23 03:01:28'),
+(9, 'kunjshah', 'qaz', '2022-04-23 03:01:28'),
+(10, 'kunjshah45', '1234', '2022-04-23 03:01:28'),
+(11, 'kunjshah', '1234', '2022-04-23 03:01:28');
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (

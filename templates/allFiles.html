@@ -275,6 +275,7 @@
         result = query(e, params = params)
         result.then(result => {
             result = JSON.parse(result)
+            console.log(result)
             if (result["query"]) {
                 queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
             }
