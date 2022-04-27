@@ -300,11 +300,11 @@
         result = query(e, params = params)
         result.then(result => {
             result = JSON.parse(result)
+            console.log(result)
             if (result["query"]) {
-                queryResult =JSON.stringify(result[result["query"]])
+                queryResult = JSON.stringify(result[result["query"]])
                 var table = document.createElement("table"), row, cellA, cellB;
                 const data = JSON.parse(queryResult);
-                console.log(data);
                 $('#myTable4').empty();
                 if (data.length < 1) {
                     $("#myTable4").css("visibility", "hidden");
@@ -317,8 +317,8 @@
                 for (var i = 0; i < data.length; i++) {
 
                     var row = `<tr>
-                                    <td>${data[i].username}</td>
-                            </tr>`
+                                    <td>${data[i].toProfile}</td>
+                                </tr>`
                     document.getElementById("myTable4").innerHTML += row
                 }
 
