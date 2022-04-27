@@ -32,15 +32,14 @@
 
 <h2>2) All the blogs of user such that all the comments are positive for these blogs.</h2>
 <form class="form-inline my-2 my-lg-0">
-    <input class="form-control mr-sm-2" name="q2input1" type="search" placeholder="Search for User X"
+    <input class="form-control mr-sm-2" id="q2input1" name="q2input1" type="search" placeholder="Search for User X"
         aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="query2(event);">Search</button>
 </form>
 <div>
-    <table class="query1table table table-striped" style="visibility: hidden;">
+    <table class="query2table table table-striped" style="visibility: hidden;">
         <tr class="bg-info">
             <th>Title</th>
-            <th>Username</th>
         </tr>
 
         <tbody id="myTable2">
@@ -56,7 +55,7 @@
     </h2>
 </a>
 <div>
-    <table class="query1table table table-striped" style="visibility: hidden;">
+    <table class="query3table table table-striped" style="visibility: hidden;">
         <tr class="bg-info">
             <th>Username</th>
         </tr>
@@ -214,32 +213,36 @@
 
     }
     function query2(e) {
-        val1 = document.getElementById("q2input1").value;
+        e.preventDefault();
+         val1 = document.getElementById("q2input1").value;
+        
         params = { "query": "query2", "q2input1": val1 }
         result = query(e, params = params)
+
+        console.log("hello",result)
         result.then(result => {
             result = JSON.parse(result)
+            // console.log(result);
             if (result["query"]) {
-                queryResult = JSON.stringify(result[result["query"]])
+                queryResult =JSON.stringify(result[result["query"]]);
                 var table = document.createElement("table"), row, cellA, cellB;
                 const data = JSON.parse(queryResult);
+                console.log("hello", data)
                 console.log(data);
                 $('#myTable2').empty();
                 if (data.length < 1) {
                     $("#myTable2").css("visibility", "hidden");
-                    $(".query1table").css("visibility", "hidden");
+                    $(".query2table").css("visibility", "hidden");
                 }
                 else {
-                    $(".query1table").css("visibility", "visible");
+                    $(".query2table").css("visibility", "visible");
                     $("#myTable2").css("visibility", "visible");
                 }
                 for (var i = 0; i < data.length; i++) {
-
-                    var row = `<tr>
-                                    <td>${data[i].title}</td>
-                                    <td>${data[i].username}</td>
-                            </tr>`
-                    document.getElementById("myTable").innerHTML += row
+                    var row =   `<tr>
+                                    <td>${data[i].title}</td>     
+                                 </tr>`
+                    document.getElementById("myTable2").innerHTML += row
                 }
             }
 
@@ -265,16 +268,16 @@
                 $('#myTable3').empty();
                 if (data.length < 1) {
                     $("#myTable3").css("visibility", "hidden");
-                    $(".query1table").css("visibility", "hidden");
+                    $(".query3table").css("visibility", "hidden");
                 }
                 else {
-                    $(".query1table").css("visibility", "visible");
+                    $(".query3table").css("visibility", "visible");
                     $("#myTable3").css("visibility", "visible");
                 }
                 for (var i = 0; i < data.length; i++) {
 
                     var row = `<tr>
-                                    <td>${data[i].username}</td>
+                                    <td>${data[i].author}</td>
                             </tr>`
                     document.getElementById("myTable3").innerHTML += row
                 }
@@ -298,7 +301,7 @@
         result.then(result => {
             result = JSON.parse(result)
             if (result["query"]) {
-                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+                queryResult =JSON.stringify(result[result["query"]])
                 var table = document.createElement("table"), row, cellA, cellB;
                 const data = JSON.parse(queryResult);
                 console.log(data);

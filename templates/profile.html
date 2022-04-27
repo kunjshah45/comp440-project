@@ -12,14 +12,7 @@
     <p>Email : {{account.email}}</p>
     <p>Hobbies : {% for each in hobbies %} {{each.hobby.hobbyName}} {% endfor %}</p>
 
-    <p>{{followers}} followers, {{following}} following.</p>
-    <div style="display: flex; ">
-        {% if 1==1 %}
-        <button type="button" style="margin-right: 60px;" class="btn btn-outline-primary">Follow</button>
-        {% else %}
-        <button type="button" class="btn btn-outline-danger">unFollow</button>
-        {% endif %}
-    </div>
+   
     {% if session['username']==account.username %}
     <button type="button" style=" margin-top: 10px; width: 50%; " class="btn btn-outline-primary"><a
             style="text-decoration: none; color:black;" href="/dashboard">Edit your profile</a></button>

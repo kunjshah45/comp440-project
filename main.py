@@ -103,8 +103,7 @@ def login():
         if account:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
-            session['username'] = account.username
-            # Redirect to home page
+            session['username'] = account.username 
             return redirect(url_for('dashboard'))
         else:
             print("No account found")
@@ -281,7 +280,7 @@ def edit(blogid):
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     try:
-        if request.method == 'POST':
+        if request.method == 'POST': 
             if 'loggedin' in session:
                 account = Users.query.filter_by(username=session["username"]).first()
                 mysql.session.commit()
@@ -331,10 +330,18 @@ def allfiles():
                 return jsonify(query)
             elif(request.json['query'] == "query2"):
 
+                val1 = request.json["q2input1"]
+                
+                posts = Posts.query.with_entities(Posts.title).filter(Posts.sno.not_in(Comments.query.with_entities(Comments.postid).filter(Comments.commentType==0)), Posts.author==val1).distinct().all()
+                op = []
+                for c in posts:
+                    op.append({"title":c[0]})
+                
                 query["query"] = "query2"
-                query["query2"] = "query2 op goes here"
+                query["query2"] = op
+                return jsonify(query)
             elif(request.json['query'] == "query3"):
-                query3 = Posts.query.with_entities(sqlalchemy.func.count(), Posts.author).filter(Posts.date>"2022-04-26 00:00:00", Posts.date<"2022-04-26 23:59:59").group_by(Posts.author).all()
+                query3 = Posts.query.with_entities(sqlalchemy.func.count(), Posts.author).filter(Posts.date>"2022-05-01 00:00:00", Posts.date<"2022-05-01 23:59:59").group_by(Posts.author).all()
                 
                 query["query"] = "query3"
                 query["query3"] = query3
