@@ -18,8 +18,22 @@
 </div>
 
 <div>
-    <p id="query1">
-    </p>
+    <table class="query1table table table-striped" style="visibility: hidden;" >
+        <tr  class="bg-info">
+            <th>Author</th>
+            <th>date</th>
+            <th>Slug</th>
+            <th>sno</th>
+            <th>Tags</th>
+            <th>Title</th>
+            <th>Views</th>
+        </tr>
+    
+        <tbody id="myTable">
+            
+        </tbody>
+    </table>
+    
 </div>
 
 
@@ -113,15 +127,44 @@
         e.preventDefault();
         let val1 = document.getElementById("q1input1").value;
         let val2 = document.getElementById("q1input2").value;
-
+        
         params = { "query": "query1", "q1input1": val1, "q1input2": val2 }
 
         result = query(e, params = params)
         result.then(result => {
             result = JSON.parse(result)
             if (result["query"]) {
-                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+                queryResult = JSON.stringify(result[result["query"]]);
+                var table = document.createElement("table"), row, cellA, cellB;
+                // document.getElementById("query1").appendChild("asdsa");
+                //document.getElementById("query1").appendChild(table);
+                const data = JSON.parse(queryResult);
+                console.log(data);
+
+                //var table = document.getElementById('myTable')
+                $('#myTable').empty();
+                if(data.length<1){
+                    $("#myTable").css("visibility", "hidden");
+                    $(".query1table").css("visibility", "hidden");
+                }
+                else{
+                    $(".query1table").css("visibility", "visible");
+                    $("#myTable").css("visibility", "visible");
+                }
+                for (var i = 0; i < data.length; i++){
+                    
+                    var row = `<tr>
+                                    <td>${data[i].author}</td>
+                                    <td>${data[i].date}</td>
+                                    <td>${data[i].slug}</td>
+                                    <td>${data[i].sno}</td>
+                                    <td>${data[i].tags}</td>
+                                    <td>${data[i].title}</td>
+                                    <td>${data[i].views}</td>
+                            </tr>`
+                document.getElementById("myTable").innerHTML += row
             }
+                }
             if (result["error"]) {
                 alert(result["error"]);
             }
@@ -138,6 +181,7 @@
             result = JSON.parse(result)
             if (result["query"]) {
                 queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+                
             }
             if (result["error"]) {
                 alert(result["error"]);
