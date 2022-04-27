@@ -2,7 +2,6 @@
 {% block content %}
 <br>
 <br>
-<div class="form-submission-text" id="afterMessage"></div>
 
 <h2>1) List the users who post at least two blogs, one has a tag of “X”, and another has a
     tag of “Y”</h2>
@@ -21,19 +20,13 @@
     <table class="query1table table table-striped" style="visibility: hidden;" >
         <tr  class="bg-info">
             <th>Author</th>
-            <th>date</th>
-            <th>Slug</th>
-            <th>sno</th>
             <th>Tags</th>
-            <th>Title</th>
-            <th>Views</th>
         </tr>
     
         <tbody id="myTable">
             
         </tbody>
     </table>
-    
 </div>
 
 
@@ -43,39 +36,41 @@
         aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="query2(event);">Search</button>
 </form>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Blogs</th>
-            <th>Comments</th>
+<div>
+    <table class="query1table table table-striped" style="visibility: hidden;" >
+        <tr  class="bg-info">
+            <th>Title</th>
+            <th>Username</th>
         </tr>
-    </thead>
-    <tbody>
-        <tr>
-            {% for post in posts %}
-            <td>{{post.title}}</td>
-            {% endfor %}
-            {% for comment in commmets %}
-            <td>{{comments.message}}</td>
-            {% endfor %}
-        </tr>
+    
+        <tbody id="myTable2">
+            
+        </tbody>
+    </table>
+</div>
 
-
-    </tbody>
-</table>
-<p id="query2"></p>
 
 <a href="" onclick="query3(event)">
     <h2>3) the users who posted the most number of blogs on 5/1/2022; if there is a tie, list all the users who have a
         tie.
     </h2>
 </a>
-<p id="query3"></p>
+<div>
+    <table class="query1table table table-striped" style="visibility: hidden;" >
+        <tr  class="bg-info">
+            <th>Username</th>
+        </tr>
+    
+        <tbody id="myTable3">
+            
+        </tbody>
+    </table>
+</div>
 
 
 <h2>4) List the users who are followed by both X and Y. Usernames X and Y are inputs
     from the user </h2>
-<div style="display: flex; justify-content: space-around;">
+
     <form class="form-inline my-2 my-lg-0">
         <input name="q4input1" id="q4input1" class="form-control mr-sm-2" type="search" placeholder="Search for User X"
             aria-label="Search">
@@ -84,43 +79,97 @@
             aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" onclick="query4(event);" type="button">Search</button>
     </form>
-    <br>
-    <p id="query4"></p>
-</div>
+    <div>
+        <table class="query1table table table-striped" style="visibility: hidden;" >
+            <tr  class="bg-info">
+                <th>Username</th>
+            </tr>
+        
+            <tbody id="myTable4">
+                
+            </tbody>
+        </table>
+    </div>
 
-<h2>5) A user pair (A, B) such that they have at least one common hobby. </h2>
-<div style="display: flex; justify-content: space-around;">
-    <form class="form-inline my-2 my-lg-0">
-        <input name="q5input1" id="q5input1" class="form-control mr-sm-2" type="search" placeholder="User A"
-            aria-label="Search">
-        <input name="q5input2" id="q5input2" class="form-control mr-sm-2" type="search" placeholder="User B"
-            aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" onclick="query5(event);" type="button">Search</button>
-    </form>
-    <p id="query5"></p>
-</div>
+
+    <a href="" onclick="query5(event)">
+        <h2>5) A user pair (A, B) such that they have at least one common hobby. </h2>
+    </a>
+    <div>
+        <table class="query1table table table-striped" style="visibility: hidden;" >
+            <tr  class="bg-info">
+                <th>Username Pair</th>
+            </tr>
+        
+            <tbody id="myTable5">
+                
+            </tbody>
+        </table>
+    </div>
+
 
 <a href="" onclick="query6(event)">
     <h2>6) All the users who never posted a blog</h2>
 </a>
-<p id="query6"></p>
+<div>
+    <table class="query1table table table-striped" style="visibility: hidden;" >
+        <tr  class="bg-info">
+            <th>Username</th>
+        </tr>
+    
+        <tbody id="myTable6">
+            
+        </tbody>
+    </table>
+</div>
 
 <a href="" onclick="query7(event)">
     <h2>7) All the users who never posted a comment</h2>
 </a>
-<p id="query7"></p>
+<div>
+    <table class="query1table table table-striped" style="visibility: hidden;" >
+        <tr  class="bg-info">
+            <th>Username</th>
+        </tr>
+    
+        <tbody id="myTable7">
+            
+        </tbody>
+    </table>
+</div>
+
 
 <a href="" onclick="query8(event)">
     <h2>8) All the users who posted some comments, but each of them is negative.
     </h2>
 </a>
-<p id="query8"></p>
+<div>
+    <table class="query1table table table-striped" style="visibility: hidden;" >
+        <tr  class="bg-info">
+            <th>Username</th>
+        </tr>
+    
+        <tbody id="myTable8">
+            
+        </tbody>
+    </table>
+</div>
 
 <a href="" onclick="query9(event)">
     <h2>9) Those users such that all the blogs they posted so far never received any
         negative comments</h2>
-    <p id="query9"></p>
 </a>
+<div>
+    <table class="query1table table table-striped" style="visibility: hidden;" >
+        <tr  class="bg-info">
+            <th>Username</th>
+        </tr>
+    
+        <tbody id="myTable9">
+            
+        </tbody>
+    </table>
+</div>
 
 <script>
     function query1(e) {
@@ -136,12 +185,8 @@
             if (result["query"]) {
                 queryResult = JSON.stringify(result[result["query"]]);
                 var table = document.createElement("table"), row, cellA, cellB;
-                // document.getElementById("query1").appendChild("asdsa");
-                //document.getElementById("query1").appendChild(table);
                 const data = JSON.parse(queryResult);
                 console.log(data);
-
-                //var table = document.getElementById('myTable')
                 $('#myTable').empty();
                 if(data.length<1){
                     $("#myTable").css("visibility", "hidden");
@@ -155,16 +200,11 @@
                     
                     var row = `<tr>
                                     <td>${data[i].author}</td>
-                                    <td>${data[i].date}</td>
-                                    <td>${data[i].slug}</td>
-                                    <td>${data[i].sno}</td>
                                     <td>${data[i].tags}</td>
-                                    <td>${data[i].title}</td>
-                                    <td>${data[i].views}</td>
                             </tr>`
                 document.getElementById("myTable").innerHTML += row
-            }
                 }
+            }
             if (result["error"]) {
                 alert(result["error"]);
             }
@@ -180,9 +220,29 @@
         result.then(result => {
             result = JSON.parse(result)
             if (result["query"]) {
-                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
-                
+                queryResult = JSON.stringify(result[result["query"]])
+                var table = document.createElement("table"), row, cellA, cellB;
+                const data = JSON.parse(queryResult);
+                console.log(data);
+                $('#myTable2').empty();
+                if(data.length<1){
+                    $("#myTable2").css("visibility", "hidden");
+                    $(".query1table").css("visibility", "hidden");
+                }
+                else{
+                    $(".query1table").css("visibility", "visible");
+                    $("#myTable2").css("visibility", "visible");
+                }
+                for (var i = 0; i < data.length; i++){
+                    
+                    var row = `<tr>
+                                    <td>${data[i].title}</td>
+                                    <td>${data[i].username}</td>
+                            </tr>`
+                document.getElementById("myTable").innerHTML += row
+                }
             }
+            
             if (result["error"]) {
                 alert(result["error"]);
             }
@@ -199,7 +259,26 @@
             result = JSON.parse(result)
             print(result)
             if (result["query"]) {
-                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+                queryResult = JSON.stringify(result[result["query"]])
+                var table = document.createElement("table"), row, cellA, cellB;
+                const data = JSON.parse(queryResult);
+                console.log(data);
+                $('#myTable3').empty();
+                if(data.length<1){
+                    $("#myTable3").css("visibility", "hidden");
+                    $(".query1table").css("visibility", "hidden");
+                }
+                else{
+                    $(".query1table").css("visibility", "visible");
+                    $("#myTable3").css("visibility", "visible");
+                }
+                for (var i = 0; i < data.length; i++){
+                    
+                    var row = `<tr>
+                                    <td>${data[i].username}</td>
+                            </tr>`
+                document.getElementById("myTable3").innerHTML += row
+                }
             }
             if (result["error"]) {
                 alert(result["error"]);
@@ -221,6 +300,26 @@
             result = JSON.parse(result)
             if (result["query"]) {
                 queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+                var table = document.createElement("table"), row, cellA, cellB;
+                const data = JSON.parse(queryResult);
+                console.log(data);
+                $('#myTable4').empty();
+                if(data.length<1){
+                    $("#myTable4").css("visibility", "hidden");
+                    $(".query1table").css("visibility", "hidden");
+                }
+                else{
+                    $(".query1table").css("visibility", "visible");
+                    $("#myTable4").css("visibility", "visible");
+                }
+                for (var i = 0; i < data.length; i++){
+                    
+                    var row = `<tr>
+                                    <td>${data[i].username}</td>
+                            </tr>`
+                document.getElementById("myTable4").innerHTML += row
+                }
+            
             }
             if (result["error"]) {
                 alert(result["error"]);
@@ -232,16 +331,35 @@
     }
     function query5(e) {
         e.preventDefault();
-        let val1 = document.getElementById("q5input1").value;
-        let val2 = document.getElementById("q5input2").value;
+     
 
-        params = { "query": "query5", "q5input1": val1, "q5input2": val2 }
+        params = { "query": "query5"}
 
         result = query(e, params = params)
         result.then(result => {
             result = JSON.parse(result)
             if (result["query"]) {
-                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+                queryResult =JSON.stringify(result[result["query"]])
+                var table = document.createElement("table"), row, cellA, cellB;
+                const data = JSON.parse(queryResult);
+                console.log(data);
+                $('#myTable5').empty();
+                if(data.length<1){
+                    $("#myTable5").css("visibility", "hidden");
+                    $(".query1table").css("visibility", "hidden");
+                }
+                else{
+                    $(".query1table").css("visibility", "visible");
+                    $("#myTable5").css("visibility", "visible");
+                }
+                for (var i = 0; i < data.length; i++){
+                    
+                    var row = `<tr>
+                                    <td>${data[i].username}</td>
+                            </tr>`
+                document.getElementById("myTable5").innerHTML += row
+                }
+            
             }
             if (result["error"]) {
                 alert(result["error"]);
@@ -259,7 +377,27 @@
         result.then(result => {
             result = JSON.parse(result)
             if (result["query"]) {
-                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+                queryResult = JSON.stringify(result[result["query"]]);
+                var table = document.createElement("table"), row, cellA, cellB;
+                const data = JSON.parse(queryResult);
+                console.log(data);
+                
+                $('#myTable6').empty();
+                if(data.length<1){
+                    $("#myTable6").css("visibility", "hidden");
+                    $(".query1table").css("visibility", "hidden");
+                }
+                else{
+                    $(".query1table").css("visibility", "visible");
+                    $("#myTable6").css("visibility", "visible");
+                }
+                for (var i = 0; i < data.length; i++){
+                    
+                    var row = `<tr>
+                                    <td>${data[i].username}</td>
+                            </tr>`
+                document.getElementById("myTable6").innerHTML += row
+                }
             }
             if (result["error"]) {
                 alert(result["error"]);
@@ -277,7 +415,27 @@
             result = JSON.parse(result)
             console.log(result)
             if (result["query"]) {
-                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+                queryResult = JSON.stringify(result[result["query"]])
+                var table = document.createElement("table"), row, cellA, cellB;
+                const data = JSON.parse(queryResult);
+                console.log(data);
+
+                $('#myTable7').empty();
+                if(data.length<1){
+                    $("#myTable7").css("visibility", "hidden");
+                    $(".query1table").css("visibility", "hidden");
+                }
+                else{
+                    $(".query1table").css("visibility", "visible");
+                    $("#myTable7").css("visibility", "visible");
+                }
+                for (var i = 0; i < data.length; i++){
+                    
+                    var row = `<tr>
+                                    <td>${data[i].author}</td>
+                            </tr>`
+                document.getElementById("myTable7").innerHTML += row
+                }
             }
             if (result["error"]) {
                 alert(result["error"]);
@@ -295,7 +453,27 @@
         result.then(result => {
             result = JSON.parse(result)
             if (result["query"]) {
-                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+                queryResult = JSON.stringify(result[result["query"]])
+                var table = document.createElement("table"), row, cellA, cellB;
+                const data = JSON.parse(queryResult);
+                console.log(data);
+                $('#myTable8').empty();
+                if(data.length<1){
+                    $("#myTable8").css("visibility", "hidden");
+                    $(".query1table").css("visibility", "hidden");
+                }
+                else{
+                    $(".query1table").css("visibility", "visible");
+                    $("#myTable8").css("visibility", "visible");
+                }
+                for (var i = 0; i < data.length; i++){
+                    
+                    var row = `<tr>
+                                    <td>${data[i].username}</td>
+                            </tr>`
+                document.getElementById("myTable8").innerHTML += row
+                }
+            
             }
             if (result["error"]) {
                 alert(result["error"]);
@@ -312,8 +490,28 @@
         result.then(result => {
             result = JSON.parse(result)
             if (result["query"]) {
-                queryResult = document.getElementById(result["query"]).innerHTML = JSON.stringify(result[result["query"]])
+                queryResult = JSON.stringify(result[result["query"]])
+                var table = document.createElement("table"), row, cellA, cellB;
+                const data = JSON.parse(queryResult);
+                console.log(data);
+                $('#myTable9').empty();
+                if(data.length<1){
+                    $("#myTable9").css("visibility", "hidden");
+                    $(".query1table").css("visibility", "hidden");
+                }
+                else{
+                    $(".query1table").css("visibility", "visible");
+                    $("#myTable9").css("visibility", "visible");
+                }
+                for (var i = 0; i < data.length; i++){
+                    
+                    var row = `<tr>
+                                    <td>${data[i].username}</td>
+                            </tr>`
+                document.getElementById("myTable9").innerHTML += row
+                }
             }
+            
             if (result["error"]) {
                 alert(result["error"]);
             }
