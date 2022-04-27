@@ -335,9 +335,12 @@ def allfiles():
                 query["query2"] = "query2 op goes here"
             elif(request.json['query'] == "query3"):
                 query3 = Posts.query.with_entities(sqlalchemy.func.count(), Posts.author).filter(Posts.date>"2022-04-26 00:00:00", Posts.date<"2022-04-26 23:59:59").group_by(Posts.author).all()
-                
+                op = []
+                for each in query3:
+                    op.append({"len": each[0], "username":each[1]})
+
                 query["query"] = "query3"
-                query["query3"] = query3
+                query["query3"] = op
                 return jsonify(query)
             elif(request.json['query'] == "query4"):
                 # select Distinct c1.toProfile from connections as c1 join connections as c2 on c1.toProfile = c2.toProfile and c1.fromProfile="kunjshah45" and c2.fromProfile="kunjshah";
