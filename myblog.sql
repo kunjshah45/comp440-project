@@ -7,10 +7,10 @@ DROP TABLE IF EXISTS `hobbies`;
 CREATE TABLE `hobbies` (
   `hid` int(11) NOT NULL AUTO_INCREMENT,
   `hobbyName` varchar(80) NOT NULL,
-  PRIMARY KEY (`hid`),
+  PRIMARY KEY (`hid`)
 );
 
-INSERT INTO `hobbies` (`hid`, `hobbyNamee`) VALUES
+INSERT INTO `hobbies` (`hid`, `hobbyName`) VALUES
 (1, 'coding'),
 (2, 'reading'),
 (3, 'dancing'),
